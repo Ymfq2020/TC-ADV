@@ -1,0 +1,31 @@
+name: tcadv_smoke
+lmca_experiment_config: configs/bridge/local_smoke_lmca.yaml
+output_dir: outputs/tcadv_smoke
+log_dir: logs/tcadv_smoke
+checkpoint_dir: checkpoints/tcadv_smoke
+tc_adv:
+  fusion:
+    gamma: 0.6
+  loss:
+    alpha: 1.0
+    beta: 2.5
+  gumbel:
+    start_temp: 1.0
+    anneal_rate: 0.95
+    min_temp: 0.05
+  trainer:
+    generator_lr: 0.001
+    discriminator_lr: 0.0005
+    max_epochs: 2
+    early_stopping_patience: 2
+    g_steps: 3
+    d_steps: 1
+    topk_fake_candidates: 3
+  trm:
+    bandwidth: auto
+    epsilon: 1e-5
+  ecm:
+    num_heads: 4
+    hidden_dim: 64
+    time_encoding_dim: 32
+    history_window: 4

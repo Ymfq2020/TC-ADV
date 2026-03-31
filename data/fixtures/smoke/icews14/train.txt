@@ -1,0 +1,6 @@
+A	ally	B	1
+A	ally	C	2
+B	trade	C	2
+C	ally	D	3
+D	trade	A	4
+A	ally	E	5

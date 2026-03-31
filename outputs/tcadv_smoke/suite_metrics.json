@@ -1,0 +1,21 @@
+[
+  {
+    "name": "tcadv_smoke",
+    "MRR": 0.5833333333333334,
+    "Hits@1": 0.5,
+    "Hits@3": 0.5,
+    "Hits@10": 1.0,
+    "AUC-PR": 0.3214285714285714,
+    "TVR": 0.0,
+    "trm_violation_rate": 0.0,
+    "ecm_violation_rate": 0.0,
+    "fused_violation_rate": 0.0,
+    "violation_breakdown": {
+      "TRM-only": 0,
+      "ECM-only": 0,
+      "both": 0,
+      "none": 2
+    },
+    "output_dir": "outputs/tcadv_smoke"
+  }
+]

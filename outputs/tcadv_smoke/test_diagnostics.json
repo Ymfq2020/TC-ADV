@@ -1,0 +1,24 @@
+[
+  {
+    "subject": "A",
+    "relation": "ally",
+    "timestamp": 7,
+    "gold": "F",
+    "top1_prediction": "F",
+    "p_trm": 0.3345484834192014,
+    "p_ecm": 0.267490795837618,
+    "p_fake": 0.30772540838656803,
+    "classification": "none"
+  },
+  {
+    "subject": "E",
+    "relation": "trade",
+    "timestamp": 7,
+    "gold": "A",
+    "top1_prediction": "E",
+    "p_trm": 0.4327335044345073,
+    "p_ecm": 0.364859491953397,
+    "p_fake": 0.4055838994420632,
+    "classification": "none"
+  }
+]

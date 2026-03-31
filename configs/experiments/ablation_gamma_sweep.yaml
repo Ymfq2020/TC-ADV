@@ -1,0 +1,11 @@
+name: tcadv_ablation_gamma_sweep
+lmca_experiment_config: ../LMCA-TIC/configs/experiments/full_icews14.yaml
+output_dir: outputs/tcadv_ablation_gamma_sweep
+log_dir: logs/tcadv_ablation_gamma_sweep
+checkpoint_dir: checkpoints/tcadv_ablation_gamma_sweep
+tc_adv:
+  fusion:
+    gamma: 0.8
+  trainer:
+    g_steps: 3
+    d_steps: 1

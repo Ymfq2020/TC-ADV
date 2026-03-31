@@ -1,0 +1,56 @@
+{
+  "A": {
+    "entity_id": "A",
+    "entity_name": "CompanyA",
+    "attributes": {
+      "entity_type": "company",
+      "country": "US",
+      "sector": "energy"
+    }
+  },
+  "B": {
+    "entity_id": "B",
+    "entity_name": "CompanyB",
+    "attributes": {
+      "entity_type": "company",
+      "country": "US",
+      "sector": "energy"
+    }
+  },
+  "C": {
+    "entity_id": "C",
+    "entity_name": "CompanyC",
+    "attributes": {
+      "entity_type": "company",
+      "country": "UK",
+      "sector": "finance"
+    }
+  },
+  "D": {
+    "entity_id": "D",
+    "entity_name": "StateD",
+    "attributes": {
+      "entity_type": "state",
+      "country": "DE",
+      "sector": "public"
+    }
+  },
+  "E": {
+    "entity_id": "E",
+    "entity_name": "OrgE",
+    "attributes": {
+      "entity_type": "organization",
+      "country": "FR",
+      "sector": "trade"
+    }
+  },
+  "F": {
+    "entity_id": "F",
+    "entity_name": "StartupF",
+    "attributes": {
+      "entity_type": "company",
+      "country": "CA",
+      "sector": "technology"
+    }
+  }
+}

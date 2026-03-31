@@ -1,0 +1,12 @@
+name: tcadv_ablation_static_margin
+lmca_experiment_config: ../LMCA-TIC/configs/experiments/full_icews14.yaml
+output_dir: outputs/tcadv_ablation_static_margin
+log_dir: logs/tcadv_ablation_static_margin
+checkpoint_dir: checkpoints/tcadv_ablation_static_margin
+tc_adv:
+  loss:
+    use_static_margin: true
+    static_margin: 1.0
+  trainer:
+    g_steps: 3
+    d_steps: 1

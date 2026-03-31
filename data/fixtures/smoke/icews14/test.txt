@@ -1,0 +1,2 @@
+A	ally	F	7
+E	trade	A	7

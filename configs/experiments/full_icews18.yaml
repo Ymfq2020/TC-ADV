@@ -1,0 +1,23 @@
+name: tcadv_full_icews18
+lmca_experiment_config: configs/bridge/full_icews18_lmca.yaml
+output_dir: outputs/tcadv_full_icews18
+log_dir: logs/tcadv_full_icews18
+checkpoint_dir: checkpoints/tcadv_full_icews18
+tc_adv:
+  fusion:
+    gamma: 0.6
+  loss:
+    alpha: 1.0
+    beta: 2.5
+  gumbel:
+    start_temp: 1.0
+    anneal_rate: 0.95
+    min_temp: 0.05
+  trainer:
+    generator_lr: 0.001
+    discriminator_lr: 0.0005
+    max_epochs: 100
+    early_stopping_patience: 10
+    g_steps: 3
+    d_steps: 1
+    topk_fake_candidates: 32

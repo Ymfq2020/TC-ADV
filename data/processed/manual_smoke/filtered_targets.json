@@ -1,0 +1,62 @@
+{
+  "A\tally\t1": [
+    "B"
+  ],
+  "B\tally__inverse\t1": [
+    "A"
+  ],
+  "A\tally\t2": [
+    "C"
+  ],
+  "C\tally__inverse\t2": [
+    "A"
+  ],
+  "B\ttrade\t2": [
+    "C"
+  ],
+  "C\ttrade__inverse\t2": [
+    "B"
+  ],
+  "C\tally\t3": [
+    "D"
+  ],
+  "D\tally__inverse\t3": [
+    "C"
+  ],
+  "D\ttrade\t4": [
+    "A"
+  ],
+  "A\ttrade__inverse\t4": [
+    "D"
+  ],
+  "A\tally\t5": [
+    "E"
+  ],
+  "E\tally__inverse\t5": [
+    "A"
+  ],
+  "A\tally\t6": [
+    "B"
+  ],
+  "B\tally__inverse\t6": [
+    "A"
+  ],
+  "C\ttrade\t6": [
+    "D"
+  ],
+  "D\ttrade__inverse\t6": [
+    "C"
+  ],
+  "A\tally\t7": [
+    "F"
+  ],
+  "F\tally__inverse\t7": [
+    "A"
+  ],
+  "E\ttrade\t7": [
+    "A"
+  ],
+  "A\ttrade__inverse\t7": [
+    "E"
+  ]
+}

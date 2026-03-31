@@ -1,0 +1,17 @@
+{
+  "MRR": 0.5,
+  "Hits@1": 0.0,
+  "Hits@3": 1.0,
+  "Hits@10": 1.0,
+  "AUC-PR": 0.3333333333333333,
+  "TVR": 0.0,
+  "trm_violation_rate": 0.0,
+  "ecm_violation_rate": 0.0,
+  "fused_violation_rate": 0.0,
+  "violation_breakdown": {
+    "TRM-only": 0,
+    "ECM-only": 0,
+    "both": 0,
+    "none": 2
+  }
+}

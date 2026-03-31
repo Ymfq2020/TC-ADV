@@ -1,0 +1,2 @@
+{"subject": "China", "relation": "meet", "timestamp": 6, "gold": "UN", "scores": {"China": 0.0029071986602411393, "France": -0.17415690591964822, "GroupA": 0.4774165375912939, "NewOrg": -0.1523503947270666, "UN": 0.14026296166025687, "USA": -0.46969145573813226}}
+{"subject": "France", "relation": "criticize", "timestamp": 7, "gold": "GroupA", "scores": {"China": -0.0970928013397589, "France": -0.07415690591964819, "GroupA": 0.6774165375912938, "NewOrg": -0.1523503947270666, "UN": -0.15973703833974318, "USA": -0.3696914557381322}}

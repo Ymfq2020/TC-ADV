@@ -1,0 +1,2 @@
+{"epoch": 1, "generator_loss": 2.2728351376914167, "discriminator_loss": 1.828836988460425, "valid_mrr": 0.75, "valid_tvr": 0.0, "temperature": 1.0, "step_time_sec": 0.0033899579999999985, "phase_trace_length": 20}
+{"epoch": 2, "generator_loss": 2.355444580903, "discriminator_loss": 1.7993209069875475, "valid_mrr": 0.75, "valid_tvr": 0.0, "temperature": 0.95, "step_time_sec": 0.003085040999999983, "phase_trace_length": 20}

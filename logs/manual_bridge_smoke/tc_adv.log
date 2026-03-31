@@ -1,0 +1,2 @@
+2026-03-23 18:30:02,339 | INFO | epoch=1 generator_loss=2.272835 discriminator_loss=1.828837 valid_mrr=0.7500 valid_tvr=0.0000 temp=1.0000
+2026-03-23 18:30:02,343 | INFO | epoch=2 generator_loss=2.355445 discriminator_loss=1.799321 valid_mrr=0.7500 valid_tvr=0.0000 temp=0.9500

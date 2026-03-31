@@ -1,0 +1,24 @@
+[
+  {
+    "subject": "NewOrg",
+    "relation": "meet",
+    "timestamp": 8,
+    "gold": "UN",
+    "top1_prediction": "GroupA",
+    "p_trm": 0.3763178727612476,
+    "p_ecm": 0.20702089913686603,
+    "p_fake": 0.308599083311495,
+    "classification": "none"
+  },
+  {
+    "subject": "USA",
+    "relation": "sanction",
+    "timestamp": 9,
+    "gold": "NewOrg",
+    "top1_prediction": "GroupA",
+    "p_trm": 0.4843284549013207,
+    "p_ecm": 0.2848164453471822,
+    "p_fake": 0.40452365107966526,
+    "classification": "none"
+  }
+]

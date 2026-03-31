@@ -1,0 +1,24 @@
+[
+  {
+    "subject": "China",
+    "relation": "meet",
+    "timestamp": 6,
+    "gold": "UN",
+    "top1_prediction": "GroupA",
+    "p_trm": 0.4156606518769568,
+    "p_ecm": 0.2001120992543994,
+    "p_fake": 0.32944123082793386,
+    "classification": "none"
+  },
+  {
+    "subject": "France",
+    "relation": "criticize",
+    "timestamp": 7,
+    "gold": "GroupA",
+    "top1_prediction": "GroupA",
+    "p_trm": 0.48063786832986954,
+    "p_ecm": 0.23747097244251422,
+    "p_fake": 0.3833711099749274,
+    "classification": "none"
+  }
+]

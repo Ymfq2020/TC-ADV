@@ -1,0 +1,6 @@
+{"entity_id":"A","entity_name":"CompanyA","entity_type":"company","country":"US","sector":"energy"}
+{"entity_id":"B","entity_name":"CompanyB","entity_type":"company","country":"US","sector":"energy"}
+{"entity_id":"C","entity_name":"CompanyC","entity_type":"company","country":"UK","sector":"finance"}
+{"entity_id":"D","entity_name":"StateD","entity_type":"state","country":"DE","sector":"public"}
+{"entity_id":"E","entity_name":"OrgE","entity_type":"organization","country":"FR","sector":"trade"}
+{"entity_id":"F","entity_name":"StartupF","entity_type":"company","country":"CA","sector":"technology"}

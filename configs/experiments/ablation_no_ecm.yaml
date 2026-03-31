@@ -1,0 +1,13 @@
+name: tcadv_ablation_no_ecm
+lmca_experiment_config: ../LMCA-TIC/configs/experiments/full_icews14.yaml
+output_dir: outputs/tcadv_ablation_no_ecm
+log_dir: logs/tcadv_ablation_no_ecm
+checkpoint_dir: checkpoints/tcadv_ablation_no_ecm
+metadata:
+  disable_ecm: true
+tc_adv:
+  fusion:
+    gamma: 0.6
+  trainer:
+    g_steps: 3
+    d_steps: 1
