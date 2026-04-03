@@ -23,7 +23,7 @@ tc_adv:
     topk_fake_candidates: 3
   trm:
     bandwidth: auto
-    epsilon: 1e-5
+    epsilon: 0.00001
   ecm:
     num_heads: 4
     hidden_dim: 64
