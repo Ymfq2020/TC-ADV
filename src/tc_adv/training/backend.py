@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import inspect
 import math
 from dataclasses import dataclass
 from pathlib import Path
@@ -58,13 +59,45 @@ class LMCAAdapter:
         self.optimizer = self.base_trainer.optimizer
         self.loss_fn = self.base_trainer.loss_fn
         self.embedding_dim = int(base_config.model.embedding_dim)
+        self.device = getattr(
+            self.base_trainer,
+            "device",
+            next(self.model.parameters()).device,
+        )
         self.entity_types = {
             entity_id: self.base_trainer._entity_types(entity_id)
             for entity_id in self.entities
         }
 
     def score_candidates(self, sample) -> dict[str, float]:
-        return self.base_trainer._current_candidate_scores(sample)
+        if hasattr(self.base_trainer, "_current_candidate_scores"):
+            return self.base_trainer._current_candidate_scores(sample)
+        if hasattr(self.base_trainer, "_current_candidate_scores_batch"):
+            batch_fn = self.base_trainer._current_candidate_scores_batch
+            parameters = inspect.signature(batch_fn).parameters
+            if "candidate_pools" in parameters:
+                batch_scores = batch_fn([sample], [list(self.entities)])
+            else:
+                batch_scores = batch_fn([sample])
+            if isinstance(batch_scores, list):
+                if not batch_scores:
+                    raise ValueError("_current_candidate_scores_batch returned an empty list.")
+                return batch_scores[0]
+            if isinstance(batch_scores, tuple):
+                if not batch_scores:
+                    raise ValueError("_current_candidate_scores_batch returned an empty tuple.")
+                return batch_scores[0]
+            if isinstance(batch_scores, dict):
+                first_value = next(iter(batch_scores.values()), None)
+                if isinstance(first_value, dict):
+                    return first_value
+            raise TypeError(
+                f"Unsupported return type from _current_candidate_scores_batch: {type(batch_scores)!r}"
+            )
+        raise AttributeError(
+            "LMCATICTrainer exposes neither _current_candidate_scores nor "
+            "_current_candidate_scores_batch."
+        )
 
     def topk_candidates(self, sample, k: int, exclude_gold: bool = True) -> list[str]:
         scores = self.score_candidates(sample)
@@ -81,6 +114,7 @@ class LMCAAdapter:
 
     def semantic_loss(self, sample, fake_candidates: list[str]):
         batch = self.base_trainer._build_batch([sample], forced_negative_candidates=fake_candidates)
+        batch = self._move_batch_to_device(batch)
         outputs = self.model(batch)
         positive_scores = outputs["positive_scores"]
         positive_labels = torch.ones_like(positive_scores)
@@ -99,13 +133,15 @@ class LMCAAdapter:
     def context_for_candidates(self, sample, candidate_ids: Sequence[str], requires_grad: bool = True) -> GeneratorContext:
         context_manager = _nullcontext() if requires_grad else torch.no_grad()
         with context_manager:
-            relation_history = torch.tensor([sample.relation_history], dtype=torch.float32)
-            subject_ids = torch.tensor([self.entity_to_idx[sample.quadruple.subject]], dtype=torch.long)
-            relation_ids = torch.tensor([self.relation_to_idx[sample.quadruple.relation]], dtype=torch.long)
+            relation_history = torch.tensor([sample.relation_history], dtype=torch.float32, device=self.device)
+            subject_ids = torch.tensor([self.entity_to_idx[sample.quadruple.subject]], dtype=torch.long, device=self.device)
+            relation_ids = torch.tensor([self.relation_to_idx[sample.quadruple.relation]], dtype=torch.long, device=self.device)
             subject_neighbor_ids, subject_neighbor_deltas = self.base_trainer._pad_neighbors(
                 [sample.subject_neighbors],
                 [sample.extra.get("subject_neighbor_deltas", [])],
             )
+            subject_neighbor_ids = subject_neighbor_ids.to(self.device)
+            subject_neighbor_deltas = subject_neighbor_deltas.to(self.device)
             subject_embed, _ = self.model.encode_entities(
                 prompts=[sample.subject_prompt],
                 relation_histories=relation_history,
@@ -114,12 +150,14 @@ class LMCAAdapter:
                 neighbor_deltas=subject_neighbor_deltas,
             )
             subject_embed = subject_embed.repeat(len(candidate_ids), 1)
-            object_ids = torch.tensor([self.entity_to_idx[candidate] for candidate in candidate_ids], dtype=torch.long)
+            object_ids = torch.tensor([self.entity_to_idx[candidate] for candidate in candidate_ids], dtype=torch.long, device=self.device)
             repeated_histories = relation_history.repeat(len(candidate_ids), 1)
             object_neighbor_ids, object_neighbor_deltas = self.base_trainer._pad_neighbors(
                 [self.entity_neighbor_cache.get(candidate, []) for candidate in candidate_ids],
                 [self.entity_delta_cache.get(candidate, []) for candidate in candidate_ids],
             )
+            object_neighbor_ids = object_neighbor_ids.to(self.device)
+            object_neighbor_deltas = object_neighbor_deltas.to(self.device)
             object_embed, _ = self.model.encode_entities(
                 prompts=[self.entity_prompts[candidate] for candidate in candidate_ids],
                 relation_histories=repeated_histories,
@@ -161,9 +199,9 @@ class LMCAAdapter:
         max_neighbors = max((len(items) for items in history_lists), default=0)
         if max_neighbors == 0:
             return (
-                torch.zeros((len(candidate_ids), 0), dtype=torch.long),
-                torch.zeros((len(candidate_ids), 0), dtype=torch.float32),
-                torch.zeros((len(candidate_ids), 0), dtype=torch.bool),
+                torch.zeros((len(candidate_ids), 0), dtype=torch.long, device=self.device),
+                torch.zeros((len(candidate_ids), 0), dtype=torch.float32, device=self.device),
+                torch.zeros((len(candidate_ids), 0), dtype=torch.bool, device=self.device),
             )
         padded_ids = []
         padded_deltas = []
@@ -177,16 +215,44 @@ class LMCAAdapter:
             padded_deltas.append(deltas)
             padded_mask.append(mask)
         return (
-            torch.tensor(padded_ids, dtype=torch.long),
-            torch.tensor(padded_deltas, dtype=torch.float32),
-            torch.tensor(padded_mask, dtype=torch.bool),
+            torch.tensor(padded_ids, dtype=torch.long, device=self.device),
+            torch.tensor(padded_deltas, dtype=torch.float32, device=self.device),
+            torch.tensor(padded_mask, dtype=torch.bool, device=self.device),
         )
 
     def save_generator_checkpoint(self, name: str) -> None:
         self.base_trainer._save_checkpoint(name)
 
     def load_generator_checkpoint(self, name: str) -> None:
-        self.base_trainer._load_checkpoint(name)
+        path = Path(self.base_config.checkpoint_dir) / name
+        if not path.exists():
+            return
+        try:
+            self.base_trainer._load_checkpoint(name)
+            return
+        except Exception:
+            payload = torch.load(path, map_location=self.device, weights_only=False)
+            if isinstance(payload, dict):
+                if "model" in payload:
+                    self.model.load_state_dict(payload["model"])
+                    return
+                if "model_state_dict" in payload:
+                    self.model.load_state_dict(payload["model_state_dict"])
+                    return
+            self.model.load_state_dict(payload)
+
+    def _move_batch_to_device(self, payload):
+        if torch is None:
+            return payload
+        if isinstance(payload, torch.Tensor):
+            return payload.to(self.device)
+        if isinstance(payload, dict):
+            return {key: self._move_batch_to_device(value) for key, value in payload.items()}
+        if isinstance(payload, list):
+            return [self._move_batch_to_device(value) for value in payload]
+        if isinstance(payload, tuple):
+            return tuple(self._move_batch_to_device(value) for value in payload)
+        return payload
 
 
 class ToyGeneratorAdapter:

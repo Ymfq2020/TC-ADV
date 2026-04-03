@@ -56,6 +56,10 @@ class TCADVTrainer:
             embedding_dim=int(self.generator.embedding_dim),
             config=self.config.tc_adv.ecm,
         )
+        self.runtime_device = getattr(self.generator, "device", None)
+        if torch is not None and self.runtime_device is not None and self.generator.supports_gradient:
+            self.trm = self.trm.to(self.runtime_device)
+            self.ecm = self.ecm.to(self.runtime_device)
         self.scheduler = StepRatioScheduler(
             g_steps=self.config.tc_adv.trainer.g_steps,
             d_steps=self.config.tc_adv.trainer.d_steps,
@@ -239,10 +243,12 @@ class TCADVTrainer:
         subject_score = torch.tensor(
             [self.trm.normalized_activity_score(sample.quadruple.subject, sample.quadruple.timestamp)],
             dtype=torch.float32,
+            device=self.runtime_device,
         )
         candidate_scores = torch.tensor(
             [self.trm.normalized_activity_score(candidate, sample.quadruple.timestamp) for candidate in fake_candidates],
             dtype=torch.float32,
+            device=self.runtime_device,
         )
         object_score = (weights * candidate_scores).sum().unsqueeze(0)
         p_trm = self.trm.probability_from_scores(subject_score, object_score)
@@ -360,7 +366,7 @@ class TCADVTrainer:
     def _violation_probabilities(self, sample, candidate_ids: list[str], requires_grad: bool):
         if not candidate_ids:
             if torch is not None and self.generator.supports_gradient:
-                empty = torch.zeros((0,), dtype=torch.float32)
+                empty = torch.zeros((0,), dtype=torch.float32, device=self.runtime_device)
                 return {"p_trm": empty, "p_ecm": empty, "p_fake": empty}
             return {"p_trm": [], "p_ecm": [], "p_fake": []}
         context = self.generator.context_for_candidates(sample, candidate_ids, requires_grad=requires_grad)
@@ -373,8 +379,8 @@ class TCADVTrainer:
             for candidate in candidate_ids
         ]
         if torch is not None and self.generator.supports_gradient:
-            subject_tensor = torch.tensor(subject_scores, dtype=torch.float32)
-            object_tensor = torch.tensor(object_scores, dtype=torch.float32)
+            subject_tensor = torch.tensor(subject_scores, dtype=torch.float32, device=self.runtime_device)
+            object_tensor = torch.tensor(object_scores, dtype=torch.float32, device=self.runtime_device)
             if self._module_enabled("trm"):
                 p_trm = self.trm.probability_from_scores(subject_tensor, object_tensor)
             else:
@@ -441,10 +447,13 @@ class TCADVTrainer:
             return
         discriminator_path = self.checkpoint_dir / f"{stem}_discriminator.pt"
         if discriminator_path.exists():
-            state = torch.load(discriminator_path, map_location="cpu")
+            state = torch.load(discriminator_path, map_location=self.runtime_device or "cpu", weights_only=False)
             self.trm.load_state_dict(state["trm"])
             self.ecm.load_state_dict(state["ecm"])
             self.temperature = float(state.get("temperature", self.temperature))
+            if self.runtime_device is not None:
+                self.trm = self.trm.to(self.runtime_device)
+                self.ecm = self.ecm.to(self.runtime_device)
 
     def _freeze_generator(self) -> None:
         if torch is None or not self.generator.supports_gradient:
