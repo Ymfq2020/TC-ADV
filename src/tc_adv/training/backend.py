@@ -385,7 +385,7 @@ def build_generator_backend(bridge: LMCATICBridge, base_config, smoke_mode: bool
     try:
         return LMCAAdapter(bridge=bridge, base_config=base_config, smoke_mode=smoke_mode)
     except Exception:
-        return ToyGeneratorAdapter(bridge=bridge, base_config=base_config)
+        raise
 
 
 def _stable_vector(key: str, dim: int) -> list[float]:

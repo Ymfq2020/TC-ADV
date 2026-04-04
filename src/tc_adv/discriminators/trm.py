@@ -115,10 +115,20 @@ class TemporalRationalityModule(_BaseModule):
         return normalize_activity_score(raw, max_score + self.config.epsilon, self.config.epsilon)
 
     def probability_from_scores(self, subject_scores, object_scores):
-        if torch is not None and hasattr(subject_scores, "shape"):
-            features = torch.stack([subject_scores, object_scores], dim=-1).float()
+        if torch is not None:
+            if hasattr(subject_scores, "shape"):
+                features = torch.stack([subject_scores, object_scores], dim=-1).float()
+            else:
+                device = self.linear.weight.device
+                features = torch.tensor(
+                    [[float(subject_scores), float(object_scores)]],
+                    dtype=torch.float32,
+                    device=device,
+                )
             validity = torch.sigmoid(self.linear(features)).squeeze(-1)
-            return 1.0 - validity
+            if hasattr(subject_scores, "shape"):
+                return 1.0 - validity
+            return float((1.0 - validity).item())
         if isinstance(subject_scores, Sequence) and not isinstance(subject_scores, (str, bytes)):
             return [
                 self.probability_from_scores(sub_score, obj_score)

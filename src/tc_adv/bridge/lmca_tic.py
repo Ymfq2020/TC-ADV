@@ -124,6 +124,18 @@ class LMCATICBridge:
             if path_value.is_absolute():
                 continue
             setattr(config, field_name, str((repo_root / path_value).resolve()))
+        model = getattr(config, "model", None)
+        if model is not None:
+            for field_name in ("llm_name", "smoke_llm_name"):
+                value = getattr(model, field_name, None)
+                if not value:
+                    continue
+                path_value = Path(value)
+                if path_value.is_absolute():
+                    continue
+                resolved = (repo_root / path_value).resolve()
+                if resolved.exists():
+                    setattr(model, field_name, str(resolved))
         return config
 
     @staticmethod
