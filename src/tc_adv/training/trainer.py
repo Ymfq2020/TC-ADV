@@ -458,27 +458,28 @@ class TCADVTrainer:
     def _freeze_generator(self) -> None:
         if torch is None or not self.generator.supports_gradient:
             return
-        for parameter in self.generator.model.parameters():
-            parameter.requires_grad = False
+        self._set_module_requires_grad(self.generator.model, enabled=False)
 
     def _unfreeze_generator(self) -> None:
         if torch is None or not self.generator.supports_gradient:
             return
-        for parameter in self.generator.model.parameters():
-            parameter.requires_grad = True
+        self._set_module_requires_grad(self.generator.model, enabled=True)
 
     def _freeze_discriminator(self) -> None:
         if torch is None or not self.generator.supports_gradient:
             return
-        for parameter in self.trm.parameters():
-            parameter.requires_grad = False
-        for parameter in self.ecm.parameters():
-            parameter.requires_grad = False
+        self._set_module_requires_grad(self.trm, enabled=False)
+        self._set_module_requires_grad(self.ecm, enabled=False)
 
     def _unfreeze_discriminator(self) -> None:
         if torch is None or not self.generator.supports_gradient:
             return
-        for parameter in self.trm.parameters():
-            parameter.requires_grad = True
-        for parameter in self.ecm.parameters():
-            parameter.requires_grad = True
+        self._set_module_requires_grad(self.trm, enabled=True)
+        self._set_module_requires_grad(self.ecm, enabled=True)
+
+    @staticmethod
+    def _set_module_requires_grad(module, enabled: bool) -> None:
+        for parameter in module.parameters():
+            if enabled and not (parameter.is_floating_point() or parameter.is_complex()):
+                continue
+            parameter.requires_grad = enabled
