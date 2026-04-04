@@ -115,7 +115,8 @@ class LMCAAdapter:
     def semantic_loss(self, sample, fake_candidates: list[str]):
         batch = self.base_trainer._build_batch([sample], forced_negative_candidates=fake_candidates)
         batch = self._move_batch_to_device(batch)
-        outputs = self.model(batch)
+        with self._autocast():
+            outputs = self.model(batch)
         positive_scores = outputs["positive_scores"]
         positive_labels = torch.ones_like(positive_scores)
         loss = self.loss_fn(positive_scores, positive_labels)
@@ -142,34 +143,35 @@ class LMCAAdapter:
             )
             subject_neighbor_ids = subject_neighbor_ids.to(self.device)
             subject_neighbor_deltas = subject_neighbor_deltas.to(self.device)
-            subject_embed, _ = self.model.encode_entities(
-                prompts=[sample.subject_prompt],
-                relation_histories=relation_history,
-                entity_ids=subject_ids,
-                neighbor_ids=subject_neighbor_ids,
-                neighbor_deltas=subject_neighbor_deltas,
-            )
-            subject_embed = subject_embed.repeat(len(candidate_ids), 1)
-            object_ids = torch.tensor([self.entity_to_idx[candidate] for candidate in candidate_ids], dtype=torch.long, device=self.device)
-            repeated_histories = relation_history.repeat(len(candidate_ids), 1)
-            object_neighbor_ids, object_neighbor_deltas = self.base_trainer._pad_neighbors(
-                [self.entity_neighbor_cache.get(candidate, []) for candidate in candidate_ids],
-                [self.entity_delta_cache.get(candidate, []) for candidate in candidate_ids],
-            )
-            object_neighbor_ids = object_neighbor_ids.to(self.device)
-            object_neighbor_deltas = object_neighbor_deltas.to(self.device)
-            object_embed, _ = self.model.encode_entities(
-                prompts=[self.entity_prompts[candidate] for candidate in candidate_ids],
-                relation_histories=repeated_histories,
-                entity_ids=object_ids,
-                neighbor_ids=object_neighbor_ids,
-                neighbor_deltas=object_neighbor_deltas,
-            )
-            repeated_relation_ids = relation_ids.repeat(len(candidate_ids))
-            relation_embed = self.model.scorer.relation_embedding(repeated_relation_ids)
-            candidate_scores = self.model.scorer(subject_embed, repeated_relation_ids, object_embed)
-            history_ids, history_deltas, history_mask = self._history_tensors(sample, candidate_ids)
-            history_embeddings = self.model.graph_encoder.embedding(history_ids)
+            with self._autocast():
+                subject_embed, _ = self.model.encode_entities(
+                    prompts=[sample.subject_prompt],
+                    relation_histories=relation_history,
+                    entity_ids=subject_ids,
+                    neighbor_ids=subject_neighbor_ids,
+                    neighbor_deltas=subject_neighbor_deltas,
+                )
+                subject_embed = subject_embed.repeat(len(candidate_ids), 1)
+                object_ids = torch.tensor([self.entity_to_idx[candidate] for candidate in candidate_ids], dtype=torch.long, device=self.device)
+                repeated_histories = relation_history.repeat(len(candidate_ids), 1)
+                object_neighbor_ids, object_neighbor_deltas = self.base_trainer._pad_neighbors(
+                    [self.entity_neighbor_cache.get(candidate, []) for candidate in candidate_ids],
+                    [self.entity_delta_cache.get(candidate, []) for candidate in candidate_ids],
+                )
+                object_neighbor_ids = object_neighbor_ids.to(self.device)
+                object_neighbor_deltas = object_neighbor_deltas.to(self.device)
+                object_embed, _ = self.model.encode_entities(
+                    prompts=[self.entity_prompts[candidate] for candidate in candidate_ids],
+                    relation_histories=repeated_histories,
+                    entity_ids=object_ids,
+                    neighbor_ids=object_neighbor_ids,
+                    neighbor_deltas=object_neighbor_deltas,
+                )
+                repeated_relation_ids = relation_ids.repeat(len(candidate_ids))
+                relation_embed = self.model.scorer.relation_embedding(repeated_relation_ids)
+                candidate_scores = self.model.scorer(subject_embed, repeated_relation_ids, object_embed)
+                history_ids, history_deltas, history_mask = self._history_tensors(sample, candidate_ids)
+                history_embeddings = self.model.graph_encoder.embedding(history_ids)
         subject_trm_score = 1.0
         return GeneratorContext(
             subject_embedding=subject_embed,
@@ -253,6 +255,13 @@ class LMCAAdapter:
         if isinstance(payload, tuple):
             return tuple(self._move_batch_to_device(value) for value in payload)
         return payload
+
+    def _autocast(self):
+        if torch is None:
+            return _nullcontext()
+        if hasattr(self.base_trainer, "_autocast"):
+            return self.base_trainer._autocast()
+        return _nullcontext()
 
 
 class ToyGeneratorAdapter:
