@@ -1,0 +1,35 @@
+name: tcadv_icews14_record_tiny_qwen25_05b_a10
+lmca_experiment_config: configs/bridge/icews14_record_tiny_qwen25_05b_a10.yaml
+output_dir: outputs/tcadv_icews14_record_tiny_qwen25_05b_a10
+log_dir: logs/tcadv_icews14_record_tiny_qwen25_05b_a10
+checkpoint_dir: checkpoints/tcadv_icews14_record_tiny_qwen25_05b_a10
+metadata:
+  runtime_target: A10-24GB-single
+  purpose: record_tiny
+  offline_mode: true
+tc_adv:
+  fusion:
+    gamma: 0.6
+  loss:
+    alpha: 1.0
+    beta: 2.5
+  gumbel:
+    start_temp: 1.0
+    anneal_rate: 0.95
+    min_temp: 0.05
+  trainer:
+    generator_lr: 0.0005
+    discriminator_lr: 0.0002
+    max_epochs: 1
+    early_stopping_patience: 1
+    g_steps: 1
+    d_steps: 1
+    topk_fake_candidates: 2
+  trm:
+    bandwidth: auto
+    epsilon: 0.00001
+  ecm:
+    num_heads: 1
+    hidden_dim: 64
+    time_encoding_dim: 8
+    history_window: 2
