@@ -1,0 +1,7 @@
+
+[dev]
+pytest>=8.0
+
+[runtime]
+torch>=2.1
+PyYAML>=6.0

@@ -1,0 +1,1 @@
+2026-04-05 15:45:14,953 | INFO | epoch=1 generator_loss=3.021887 discriminator_loss=2.110862 valid_mrr=0.1238 valid_tvr=0.0000 temp=1.0000

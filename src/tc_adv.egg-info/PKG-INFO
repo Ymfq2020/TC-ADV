@@ -1,0 +1,28 @@
+Metadata-Version: 2.4
+Name: tc-adv
+Version: 0.1.0
+Summary: TC-ADV: Temporal Constraint-based Adversarial Verification for temporal KG completion
+Author: Codex
+License: MIT
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Provides-Extra: runtime
+Requires-Dist: torch>=2.1; extra == "runtime"
+Requires-Dist: PyYAML>=6.0; extra == "runtime"
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0; extra == "dev"
+
+# TC-ADV
+
+`TC-ADV` 是论文第二个核心工作的科研工程仓库，定位为 `LMCA-TIC` 生成器的对抗验证扩展层。
+
+最小工作流：
+
+```bash
+python3 -m pip install -e .
+tc-adv prepare-data --events /path/to/events.csv --entities /path/to/entities.csv --output-root data/local/icews18
+tc-adv train --config configs/experiments/smoke.yaml
+tc-adv evaluate --config configs/experiments/smoke.yaml
+tc-adv run-suite --config configs/experiments/smoke.yaml
+tc-adv export-code --output outputs/code_bundle.md
+```

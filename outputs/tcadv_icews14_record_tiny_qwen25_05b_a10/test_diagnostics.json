@@ -1,0 +1,112 @@
+[
+  {
+    "subject": "Aam Aadmi Party",
+    "relation": "Express intent to provide humanitarian aid",
+    "timestamp": 15,
+    "gold": "Citizen (India)",
+    "top1_prediction": "Julius Malema",
+    "p_trm": 0.4222409725189209,
+    "p_ecm": 0.546642541885376,
+    "p_fake": 0.4720016121864319,
+    "classification": "ECM-only"
+  },
+  {
+    "subject": "A.P. Sharma",
+    "relation": "Consult",
+    "timestamp": 33,
+    "gold": "Oommen Chandy",
+    "top1_prediction": "Other Authorities / Officials (Peru)",
+    "p_trm": 0.43055015802383423,
+    "p_ecm": 0.5077105760574341,
+    "p_fake": 0.4614143371582031,
+    "classification": "ECM-only"
+  },
+  {
+    "subject": "Aam Aadmi Party",
+    "relation": "Criticize or denounce",
+    "timestamp": 101,
+    "gold": "Employee (India)",
+    "top1_prediction": "Election Commission (India)",
+    "p_trm": 0.128736674785614,
+    "p_ecm": 0.48840057849884033,
+    "p_fake": 0.27260223031044006,
+    "classification": "none"
+  },
+  {
+    "subject": "Aam Aadmi Party",
+    "relation": "Accuse",
+    "timestamp": 109,
+    "gold": "Citizen (India)",
+    "top1_prediction": "Ministry of Tourism (India)",
+    "p_trm": 0.29732418060302734,
+    "p_ecm": 0.5652403831481934,
+    "p_fake": 0.4044906497001648,
+    "classification": "ECM-only"
+  },
+  {
+    "subject": "Aam Aadmi Party",
+    "relation": "Criticize or denounce",
+    "timestamp": 127,
+    "gold": "Election Commission (India)",
+    "top1_prediction": "Election Commission (India)",
+    "p_trm": 0.20041054487228394,
+    "p_ecm": 0.4859894812107086,
+    "p_fake": 0.31464213132858276,
+    "classification": "none"
+  },
+  {
+    "subject": "Aam Aadmi Party",
+    "relation": "Criticize or denounce",
+    "timestamp": 203,
+    "gold": "Citizen (India)",
+    "top1_prediction": "Peter Greste",
+    "p_trm": 0.419411301612854,
+    "p_ecm": 0.49656832218170166,
+    "p_fake": 0.45027410984039307,
+    "classification": "none"
+  },
+  {
+    "subject": "Aam Aadmi Party",
+    "relation": "Accuse",
+    "timestamp": 229,
+    "gold": "Member of Parliament (India)",
+    "top1_prediction": "Citizen (India)",
+    "p_trm": 0.2839856743812561,
+    "p_ecm": 0.5379766225814819,
+    "p_fake": 0.3855820596218109,
+    "classification": "ECM-only"
+  },
+  {
+    "subject": "Aam Aadmi Party",
+    "relation": "Make an appeal or request",
+    "timestamp": 299,
+    "gold": "Election Commission (India)",
+    "top1_prediction": "Yogendra Yadav",
+    "p_trm": 0.4653088450431824,
+    "p_ecm": 0.5656980872154236,
+    "p_fake": 0.5054645538330078,
+    "classification": "ECM-only"
+  },
+  {
+    "subject": "Aam Aadmi Party",
+    "relation": "Engage in symbolic act",
+    "timestamp": 329,
+    "gold": "Citizen (India)",
+    "top1_prediction": "ADF-NALU",
+    "p_trm": 0.39814966917037964,
+    "p_ecm": 0.47579488158226013,
+    "p_fake": 0.42920777201652527,
+    "classification": "none"
+  },
+  {
+    "subject": "Aam Aadmi Party",
+    "relation": "Engage in symbolic act",
+    "timestamp": 349,
+    "gold": "Citizen (India)",
+    "top1_prediction": "Abdel Fattah Al-Sisi",
+    "p_trm": 0.3003382086753845,
+    "p_ecm": 0.5180765390396118,
+    "p_fake": 0.3874335289001465,
+    "classification": "ECM-only"
+  }
+]
