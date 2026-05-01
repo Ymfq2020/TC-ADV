@@ -209,6 +209,102 @@ class TCADVTrainer:
         write_json(self.output_dir / f"{split}_diagnostics.json", diagnostics)
         return metrics
 
+    def evaluate_with_noise(self, split: str = "test", checkpoint_name: str | None = None, sigma: float = 1.0) -> dict[str, float]:
+        import random
+        if checkpoint_name:
+            self._load_checkpoint_pair(checkpoint_name)
+        dataset = {
+            "train": self.generator.train_dataset,
+            "valid": self.generator.valid_dataset,
+            "test": self.generator.test_dataset,
+        }[split]
+        evaluator = self.bridge.create_filtered_evaluator(self.generator.filtered_targets)
+        predictions: list[dict[str, Any]] = []
+
+        for sample in dataset.samples:
+            original_ts = sample.quadruple.timestamp
+            if random.random() < 0.5:
+                noise = random.gauss(0, sigma)
+                sample.quadruple.timestamp = int(round(original_ts + noise))
+                
+            scores = self.generator.score_candidates(sample)
+            predictions.append(
+                {
+                    "subject": sample.quadruple.subject,
+                    "relation": sample.quadruple.relation,
+                    "timestamp": sample.quadruple.timestamp,
+                    "gold": sample.quadruple.object,
+                    "scores": scores,
+                }
+            )
+            sample.quadruple.timestamp = original_ts
+
+        metrics = evaluator.evaluate(predictions).to_dict()
+        noise_name = str(sigma).replace(".", "p")
+        write_json(self.output_dir / f"{split}_noise_{noise_name}_metrics.json", metrics)
+        write_jsonl(self.output_dir / f"{split}_noise_{noise_name}_predictions.jsonl", predictions)
+        return metrics
+
+    def evaluate_multi_step(self, split: str = "test", checkpoint_name: str | None = None, max_steps: int = 5) -> dict[int, dict[str, float]]:
+        if checkpoint_name:
+            self._load_checkpoint_pair(checkpoint_name)
+        dataset = {
+            "train": self.generator.train_dataset,
+            "valid": self.generator.valid_dataset,
+            "test": self.generator.test_dataset,
+        }[split]
+        evaluator = self.bridge.create_filtered_evaluator(self.generator.filtered_targets)
+        
+        samples = sorted(dataset.samples, key=lambda s: s.quadruple.timestamp)
+        metrics_by_step = {}
+        predictions = []
+        
+        for step in range(1, max_steps + 1):
+            if step == 1:
+                for sample in samples:
+                    scores = self.generator.score_candidates(sample)
+                    predictions.append(
+                        {
+                            "subject": sample.quadruple.subject,
+                            "relation": sample.quadruple.relation,
+                            "timestamp": sample.quadruple.timestamp,
+                            "gold": sample.quadruple.object,
+                            "scores": scores,
+                            "top1": max(scores.items(), key=lambda x: x[1])[0] if scores else None
+                        }
+                    )
+                metrics = evaluator.evaluate(predictions).to_dict()
+                metrics_by_step[step] = metrics
+                write_json(self.output_dir / f"{split}_multistep_{step}_metrics.json", metrics)
+            else:
+                import copy
+                prev_preds = predictions
+                predictions = []
+                for i, sample in enumerate(samples):
+                    fake_sample = copy.copy(sample)
+                    prev_top1 = prev_preds[i]["top1"]
+                    if prev_top1 is not None:
+                        fake_sample.relation_history = list(sample.relation_history) + [1.0]
+                        fake_sample.subject_neighbors = list(sample.subject_neighbors) + [prev_top1]
+                        
+                    scores = self.generator.score_candidates(fake_sample)
+                    predictions.append(
+                        {
+                            "subject": sample.quadruple.subject,
+                            "relation": sample.quadruple.relation,
+                            "timestamp": sample.quadruple.timestamp + (step - 1),
+                            "gold": sample.quadruple.object,
+                            "scores": scores,
+                            "top1": max(scores.items(), key=lambda x: x[1])[0] if scores else None
+                        }
+                    )
+                metrics = evaluator.evaluate(predictions).to_dict()
+                metrics_by_step[step] = metrics
+                write_json(self.output_dir / f"{split}_multistep_{step}_metrics.json", metrics)
+                
+        return metrics_by_step
+
+
     def _override_base_config(self) -> None:
         self.base_config.learning_rate = self.config.tc_adv.trainer.generator_lr
         self.base_config.num_epochs = self.config.tc_adv.trainer.max_epochs

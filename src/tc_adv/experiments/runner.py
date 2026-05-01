@@ -24,6 +24,27 @@ def evaluate_config(config_path: str) -> dict[str, object]:
     return {"name": config.name, **metrics, "output_dir": config.output_dir}
 
 
+def evaluate_noise_config(config_path: str, sigma: float = 1.0) -> dict[str, object]:
+    config = load_tcadv_config(config_path)
+    trainer = TCADVTrainer(config=config)
+    metrics = trainer.evaluate_with_noise(split="test", checkpoint_name="best", sigma=sigma)
+    return {"name": config.name, **metrics, "output_dir": config.output_dir, "sigma": sigma}
+
+
+def evaluate_multi_step_config(config_path: str, max_steps: int = 5) -> dict[int, dict[str, float]]:
+    config = load_tcadv_config(config_path)
+    trainer = TCADVTrainer(config=config)
+    metrics_by_step = trainer.evaluate_multi_step(split="test", checkpoint_name="best", max_steps=max_steps)
+    return metrics_by_step
+
+
+def evaluate_tvr_offline(config_path: str, predictions_path: str) -> dict[str, float]:
+    from tc_adv.experiments.tvr_evaluator import TVREvaluator
+    evaluator = TVREvaluator(config_path=config_path)
+    metrics = evaluator.evaluate_predictions(predictions_path)
+    return metrics
+
+
 def run_experiment_suite(config_paths: list[str]) -> dict[str, object]:
     rows: list[dict[str, object]] = []
     failures: list[dict[str, str]] = []
