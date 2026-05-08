@@ -3,9 +3,11 @@ lmca_experiment_config: ../LMCA-TIC/configs/experiments/full_icews14.yaml
 output_dir: outputs/tcadv_full_icews14
 log_dir: logs/tcadv_full_icews14
 checkpoint_dir: checkpoints/tcadv_full_icews14
+metadata:
+  seed: 42
 tc_adv:
   fusion:
-    gamma: 0.6
+    gamma: 0.7
   loss:
     alpha: 1.0
     beta: 2.5
@@ -21,3 +23,5 @@ tc_adv:
     g_steps: 3
     d_steps: 1
     topk_fake_candidates: 32
+    generator_loss_weight: 1.0
+    adversarial_loss_weight: 0.1

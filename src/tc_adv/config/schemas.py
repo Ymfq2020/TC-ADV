@@ -23,7 +23,7 @@ class ECMConfig:
 
 @dataclass
 class FusionConfig:
-    gamma: float = 0.6
+    gamma: float = 0.7
 
 
 @dataclass
@@ -39,6 +39,7 @@ class GumbelConfig:
     start_temp: float = 1.0
     anneal_rate: float = 0.95
     min_temp: float = 0.05
+    fixed_temp: float | None = None
 
 
 @dataclass
@@ -51,7 +52,9 @@ class TrainerConfig:
     d_steps: int = 1
     topk_fake_candidates: int = 32
     generator_loss_weight: float = 1.0
-    adversarial_loss_weight: float = 1.0
+    adversarial_loss_weight: float = 0.1
+    multi_step_horizon: int = 1
+    multi_step_discount: float = 0.9
 
 
 @dataclass

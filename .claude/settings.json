@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import PyPDF2; print\\('PyPDF2 available'\\)\")",
+      "Bash(python3 -c \"import pdfplumber; print\\('pdfplumber available'\\)\")",
+      "Bash(python3 -c \"import pypdf; print\\('pypdf available'\\)\")",
+      "Bash(brew --version)",
+      "Bash(brew list *)",
+      "Read(//private/tmp/**)",
+      "Bash(python3 -c ' *)",
+      "Bash(python3 -m pytest tests/test_objectives.py tests/test_trm.py tests/test_ecm.py tests/test_sweeps.py tests/test_error_analysis.py -v --tb=short)",
+      "Bash(PYTHONPATH=src python3 -c ' *)",
+      "Bash(chmod +x \"/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/run_chapter4.sh\")",
+      "Bash(PYTHONPATH=src python3 -m tc_adv.cli --help)"
+    ]
+  }
+}

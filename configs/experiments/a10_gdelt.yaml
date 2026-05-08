@@ -1,8 +1,8 @@
-name: tcadv_a10_icews14
-lmca_experiment_config: ../LMCA-TIC/configs/experiments/full_icews14.yaml
-output_dir: outputs/tcadv_a10_icews14
-log_dir: logs/tcadv_a10_icews14
-checkpoint_dir: checkpoints/tcadv_a10_icews14
+name: tcadv_a10_gdelt
+lmca_experiment_config: configs/bridge/a10_gdelt_lmca.yaml
+output_dir: outputs/tcadv_a10_gdelt
+log_dir: logs/tcadv_a10_gdelt
+checkpoint_dir: checkpoints/tcadv_a10_gdelt
 metadata:
   runtime_target: A10-24GB-single
   purpose: single_gpu_reduced_full

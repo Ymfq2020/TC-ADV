@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import math
+import os
+import random
 import time
 from pathlib import Path
 from types import SimpleNamespace
@@ -29,11 +31,29 @@ from tc_adv.utils.io import ensure_dir, write_json, write_jsonl
 from tc_adv.utils.logging import build_logger, capture_manifest, write_manifest
 
 
+def _seed_everything(seed: int) -> None:
+    random.seed(seed)
+    os.environ["PYTHONHASHSEED"] = str(seed)
+    if torch is None:
+        return
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+    try:
+        import numpy as np
+        np.random.seed(seed)
+    except ImportError:
+        pass
+
+
 class TCADVTrainer:
     """Adversarial trainer for the second core contribution."""
 
     def __init__(self, config: TCADVExperimentConfig, bridge: LMCATICBridge | None = None) -> None:
         self.config = config
+        seed = int(config.metadata.get("seed", 42))
+        _seed_everything(seed)
+        self.seed = seed
         self.bridge = bridge or LMCATICBridge()
         self.base_config = self.bridge.load_experiment_config(config.lmca_experiment_config)
         self._override_base_config()
@@ -64,7 +84,11 @@ class TCADVTrainer:
             g_steps=self.config.tc_adv.trainer.g_steps,
             d_steps=self.config.tc_adv.trainer.d_steps,
         )
-        self.temperature = float(self.config.tc_adv.gumbel.start_temp)
+        self._fixed_temperature = self.config.tc_adv.gumbel.fixed_temp
+        if self._fixed_temperature is not None:
+            self.temperature = float(self._fixed_temperature)
+        else:
+            self.temperature = float(self.config.tc_adv.gumbel.start_temp)
         self.discriminator_loss_fn = (
             nn.BCELoss() if torch is not None and isinstance(self.generator.supports_gradient, bool) else None
         )
@@ -145,7 +169,7 @@ class TCADVTrainer:
                 self.temperature,
                 self.config.tc_adv.gumbel.anneal_rate,
                 self.config.tc_adv.gumbel.min_temp,
-            )
+            ) if self._fixed_temperature is None else self._fixed_temperature
 
         write_jsonl(self.output_dir / "train_history.jsonl", train_history)
         write_jsonl(self.output_dir / "violation_history.jsonl", violation_history)
