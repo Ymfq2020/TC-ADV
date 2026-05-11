@@ -1,0 +1,20 @@
+{
+  "MRR": 0.2630248751955772,
+  "Hits@1": 0.20515940265255023,
+  "Hits@3": 0.2710762364173297,
+  "Hits@10": 0.2920105251548859,
+  "AUC-PR": 0.2130754226212579,
+  "TVR": 0.13959096760867062,
+  "trm_violation_rate": 0.07677503218476885,
+  "ecm_violation_rate": 0.06281593542390178,
+  "fused_violation_rate": 0.13959096760867062,
+  "violation_breakdown": {
+    "TRM-only": 283,
+    "ECM-only": 188,
+    "both": 157,
+    "none": 3872
+  },
+  "model": "BoxTE",
+  "dataset": "ICEWS18",
+  "seed": 42
+}

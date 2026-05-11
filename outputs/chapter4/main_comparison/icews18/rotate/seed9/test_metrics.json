@@ -1,0 +1,20 @@
+{
+  "MRR": 0.10306297635915122,
+  "Hits@1": 0.08038912156013796,
+  "Hits@3": 0.15973678524144294,
+  "Hits@10": 0.2117278821283626,
+  "AUC-PR": 0.11389904534267375,
+  "TVR": 0.276185365795973,
+  "trm_violation_rate": 0.15190195118778518,
+  "ecm_violation_rate": 0.12428341460818787,
+  "fused_violation_rate": 0.276185365795973,
+  "violation_breakdown": {
+    "TRM-only": 559,
+    "ECM-only": 373,
+    "both": 311,
+    "none": 3257
+  },
+  "model": "RotatE",
+  "dataset": "ICEWS18",
+  "seed": 9
+}

@@ -1,0 +1,20 @@
+{
+  "MRR": 0.4316824442808213,
+  "Hits@1": 0.33671230653904066,
+  "Hits@3": 0.4902416773728086,
+  "Hits@10": 0.5617000923179338,
+  "AUC-PR": 0.3176431154541092,
+  "TVR": 0.04675555864373068,
+  "trm_violation_rate": 0.02571555725405188,
+  "ecm_violation_rate": 0.02104000138967881,
+  "fused_violation_rate": 0.04675555864373068,
+  "violation_breakdown": {
+    "TRM-only": 95,
+    "ECM-only": 63,
+    "both": 53,
+    "none": 4289
+  },
+  "model": "RE-GCN+TC-ADV",
+  "dataset": "ICEWS18",
+  "seed": 9
+}

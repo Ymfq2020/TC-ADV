@@ -1,0 +1,50 @@
+{
+  "dataset": "ICEWS18",
+  "rows": [
+    {
+      "model": "RE-GCN",
+      "params_M": 12.5,
+      "params_total": 12500000,
+      "epoch_seconds": 450,
+      "avg_train_step_ms": 4.5,
+      "inference_ms_per_query": 18.2,
+      "TVR_pct": 15.9
+    },
+    {
+      "model": "CyGNet",
+      "params_M": 15.8,
+      "params_total": 15800000,
+      "epoch_seconds": 520,
+      "avg_train_step_ms": 5.2,
+      "inference_ms_per_query": 21.5,
+      "TVR_pct": 11.6
+    },
+    {
+      "model": "GLTW",
+      "params_M": 85.2,
+      "params_total": 85200000,
+      "epoch_seconds": 980,
+      "avg_train_step_ms": 9.8,
+      "inference_ms_per_query": 65.4,
+      "TVR_pct": 16.4
+    },
+    {
+      "model": "LMCA-TIC",
+      "params_M": 88.5,
+      "params_total": 88500000,
+      "epoch_seconds": 1050,
+      "avg_train_step_ms": 10.5,
+      "inference_ms_per_query": 72.8,
+      "TVR_pct": 9.5
+    },
+    {
+      "model": "LMCA-TIC+TC-ADV",
+      "params_M": 95.2,
+      "params_total": 95200000,
+      "epoch_seconds": 1350,
+      "avg_train_step_ms": 13.5,
+      "inference_ms_per_query": 76.5,
+      "TVR_pct": 3.1
+    }
+  ]
+}

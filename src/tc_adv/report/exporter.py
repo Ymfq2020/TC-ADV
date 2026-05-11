@@ -13,7 +13,6 @@ def export_repository_code(output_path: str | Path, repo_root: str | Path | None
         root / "configs",
         root / "src",
         root / "scripts",
-        root / "tests",
     ]
     parts: list[str] = []
     for group in ordered_groups:
@@ -21,6 +20,8 @@ def export_repository_code(output_path: str | Path, repo_root: str | Path | None
             continue
         for file_path in sorted(path for path in group.rglob("*") if path.is_file()):
             rel = file_path.relative_to(root)
+            if _should_skip_file(file_path):
+                continue
             parts.append(f"```text\n# FILE: {rel}\n```")
             parts.append(f"```{_language_for(file_path)}\n{file_path.read_text(encoding='utf-8')}\n```")
     destination = Path(output_path)
@@ -39,3 +40,15 @@ def _language_for(path: Path) -> str:
         ".json": "json",
         ".jsonl": "json",
     }.get(path.suffix.lower(), "text")
+
+
+def _should_skip_file(path: Path) -> bool:
+    if "__pycache__" in path.parts:
+        return True
+    if any(part.endswith(".egg-info") for part in path.parts):
+        return True
+    try:
+        path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        return True
+    return False

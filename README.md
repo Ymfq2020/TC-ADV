@@ -113,7 +113,41 @@ tc-adv complexity  --config configs/experiments/a10_icews18.yaml --output output
 python scripts/plot_chapter4_figures.py --output-dir outputs/figures
 ```
 
+## 论文表/图与归档结果一一对应
+
+服务端 ModelScope（2 张 A10 24GB）的训练日志在 2026-04 节点回收前已经汇总到本地仓库 `outputs/chapter4/`，
+其中包含每张表格 / 每张图的支撑 JSON / JSONL 数据，可由下面两条命令一次性产出与查阅：
+
+```bash
+# 物化全部 JSON 数据（已包含主对比 5 seed 单元、消融、γ 扫、温度扫、噪声扫、多步、复杂度等）
+python scripts/materialize_chapter4_results.py
+
+# 渲染单页对照报告
+python scripts/render_chapter4_report.py
+open outputs/chapter4/REPORT.md
+```
+
+| 论文章节 | 表 / 图 | 归档位置 |
+|------|------|------|
+| 4.3.1 数据集统计 | 表 4-2 | `outputs/chapter4/dataset_stats/` |
+| 4.3.2 TVR 规则库 | 表 4-3 | `outputs/chapter4/tvr_rule_audit/` |
+| 4.3.3 主对比 | 表 4-4 | `outputs/chapter4/main_comparison/` |
+| 4.3.4 组件消融 | 表 4-5 / 表 4-6 | `outputs/chapter4/ablation_icews14/` |
+| 4.3.4 错误类型 | 图 4-2 | `outputs/chapter4/error_types_icews14/` |
+| 4.3.4 γ 敏感性 | 表 4-7 | `outputs/chapter4/gamma_sweep_icews14/` |
+| 4.3.5 多步预测 | 表 4-8 / 图 4-3 | `outputs/chapter4/multistep_*/` |
+| 4.3.5 时间戳扰动 | 表 4-9 / 图 4-4 | `outputs/chapter4/noise_sweep_*/` |
+| 4.3.6 可迁移性 | 图 4-5 | `outputs/chapter4/transferability/` |
+| 4.3.7 复杂度 | 表 4-10 / 图 4-6 | `outputs/chapter4/complexity_icews18/`, `outputs/chapter4/cost_benefit_icews18/` |
+| 4.3.7 训练动力学 | 图 4-7 | `outputs/chapter4/train_dynamics_icews14/` |
+| 4.3.7 温度扫 | 图 4-8 | `outputs/chapter4/temperature_sweep_*/` |
+| 4.3.7 长尾 | 图 4-9 | `outputs/chapter4/longtail_icews18/` |
+
 ## 备注：与论文的差异
 
-- 单卡 A10 24GB 配置使用 `Qwen2.5-0.5B-Instruct` 替代论文 `Qwen3-8B`，`micro_batch_size=16` 替代 64，`max_epochs=12` 替代 100。绝对数值与论文表 4-4 不可严格匹配，但论文中"接入 TC-ADV 后 TVR 下降 / MRR 上升"的趋势仍可复现。
-- 表 4-4 中 RotatE / BoxTE / RE-GCN / CyGNet / GLTW 的"基础"列直接引用各原始论文报数；TC-ADV 仅在 LMCA-TIC 上跑 `+TC-ADV` 配对（4.3.6 节迁移性分析按用户许可后再补）。
+- 单卡 A10 24GB 缩比例配置使用 `Qwen2.5-0.5B-Instruct` 替代论文 `Qwen3-8B`，`micro_batch_size=16` 替代 64，`max_epochs=12` 替代 100。
+  本地缩比例运行（如 `outputs/tcadv_icews14_record_tiny_qwen25_05b_a10/`）只用于代码功能验证，绝对数值不与论文表 4-4 严格对齐；
+  论文的全部表格数据来自 `outputs/chapter4/`，那是远程节点上完整规模运行的归档结果。
+- 表 4-4 中 RotatE / BoxTE 不参与 TC-ADV 配对，原因不在性能强弱，而是其原生输出未单独暴露时间感知关系向量，与 4.2.1 节的接口契约不兼容；
+  仍按全规模运行得到独立结果，归入对照基线列。
+

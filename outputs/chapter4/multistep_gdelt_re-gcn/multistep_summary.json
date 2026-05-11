@@ -1,0 +1,49 @@
+{
+  "base_config": "configs/experiments/full_gdelt.yaml",
+  "dataset": "GDELT",
+  "model": "RE-GCN",
+  "max_steps": 5,
+  "rows": [
+    {
+      "step": 1,
+      "horizon": "t+1",
+      "MRR": 0.392,
+      "Hits@10": 0.521,
+      "MRR_std_pct": 0.34,
+      "Hits@10_std_pct": 0.43
+    },
+    {
+      "step": 2,
+      "horizon": "t+2",
+      "MRR": 0.335,
+      "Hits@10": 0.45399999999999996,
+      "MRR_std_pct": 0.42,
+      "Hits@10_std_pct": 0.51
+    },
+    {
+      "step": 3,
+      "horizon": "t+3",
+      "MRR": 0.289,
+      "Hits@10": 0.39299999999999996,
+      "MRR_std_pct": 0.51,
+      "Hits@10_std_pct": 0.59
+    },
+    {
+      "step": 4,
+      "horizon": "t+4",
+      "MRR": 0.24600000000000002,
+      "Hits@10": 0.34600000000000003,
+      "MRR_std_pct": 0.59,
+      "Hits@10_std_pct": 0.66
+    },
+    {
+      "step": 5,
+      "horizon": "t+5",
+      "MRR": 0.214,
+      "Hits@10": 0.305,
+      "MRR_std_pct": 0.68,
+      "Hits@10_std_pct": 0.74
+    }
+  ],
+  "decay_pct": -45.41
+}

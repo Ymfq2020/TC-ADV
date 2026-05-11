@@ -1,0 +1,49 @@
+{
+  "base_config": "configs/experiments/full_icews14.yaml",
+  "dataset": "ICEWS14",
+  "model": "LMCA-TIC",
+  "max_steps": 5,
+  "rows": [
+    {
+      "step": 1,
+      "horizon": "t+1",
+      "MRR": 0.47100000000000003,
+      "Hits@10": 0.6940000000000001,
+      "MRR_std_pct": 0.27,
+      "Hits@10_std_pct": 0.36
+    },
+    {
+      "step": 2,
+      "horizon": "t+2",
+      "MRR": 0.44,
+      "Hits@10": 0.65,
+      "MRR_std_pct": 0.32,
+      "Hits@10_std_pct": 0.42
+    },
+    {
+      "step": 3,
+      "horizon": "t+3",
+      "MRR": 0.406,
+      "Hits@10": 0.607,
+      "MRR_std_pct": 0.38,
+      "Hits@10_std_pct": 0.48
+    },
+    {
+      "step": 4,
+      "horizon": "t+4",
+      "MRR": 0.375,
+      "Hits@10": 0.564,
+      "MRR_std_pct": 0.44,
+      "Hits@10_std_pct": 0.54
+    },
+    {
+      "step": 5,
+      "horizon": "t+5",
+      "MRR": 0.33899999999999997,
+      "Hits@10": 0.523,
+      "MRR_std_pct": 0.5,
+      "Hits@10_std_pct": 0.61
+    }
+  ],
+  "decay_pct": -28.03
+}

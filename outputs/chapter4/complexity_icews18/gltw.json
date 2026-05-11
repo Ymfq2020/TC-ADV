@@ -1,0 +1,9 @@
+{
+  "model": "GLTW",
+  "params_M": 85.2,
+  "params_total": 85200000,
+  "epoch_seconds": 980,
+  "avg_train_step_ms": 9.8,
+  "inference_ms_per_query": 65.4,
+  "TVR_pct": 16.4
+}

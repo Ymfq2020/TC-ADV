@@ -11,7 +11,17 @@
       "Bash(python3 -m pytest tests/test_objectives.py tests/test_trm.py tests/test_ecm.py tests/test_sweeps.py tests/test_error_analysis.py -v --tb=short)",
       "Bash(PYTHONPATH=src python3 -c ' *)",
       "Bash(chmod +x \"/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/run_chapter4.sh\")",
-      "Bash(PYTHONPATH=src python3 -m tc_adv.cli --help)"
+      "Bash(PYTHONPATH=src python3 -m tc_adv.cli --help)",
+      "Bash(ls ~/Desktop/ | head -50)",
+      "Read(//Users/liangqin/Desktop/**)",
+      "Bash(python3 -m pytest tests/ --collect-only -q)",
+      "Bash(python3 -m pytest tests/ -q --tb=no)",
+      "Bash(python3 scripts/materialize_chapter4_results.py)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); s=d['summary']['all']; print\\('TVR:', s['TVR']['mean']*100, '+/-', s['TVR']['std']*100\\); print\\('MRR:', s['MRR']['mean']*100, '+/-', s['MRR']['std']*100\\); print\\('H10:', s['Hits@10']['mean']*100, '+/-', s['Hits@10']['std']*100\\)\")",
+      "Bash(python3 -)",
+      "Bash(python3 scripts/render_chapter4_report.py)",
+      "Bash(python3 -m pytest tests/ -x --tb=short)",
+      "Bash(python3 -m pytest tests/ --tb=short)"
     ]
   }
 }

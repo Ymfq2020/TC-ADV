@@ -1,0 +1,41 @@
+{
+  "dataset": "ICEWS18",
+  "note": "用于图 4-6（复杂度—收益权衡）柱+线组合图，与表 4-10 同源",
+  "rows": [
+    {
+      "model": "RE-GCN",
+      "epoch_seconds": 450,
+      "inference_ms_per_query": 18.2,
+      "params_M": 12.5,
+      "TVR_pct": 15.9
+    },
+    {
+      "model": "CyGNet",
+      "epoch_seconds": 520,
+      "inference_ms_per_query": 21.5,
+      "params_M": 15.8,
+      "TVR_pct": 11.6
+    },
+    {
+      "model": "GLTW",
+      "epoch_seconds": 980,
+      "inference_ms_per_query": 65.4,
+      "params_M": 85.2,
+      "TVR_pct": 16.4
+    },
+    {
+      "model": "LMCA-TIC",
+      "epoch_seconds": 1050,
+      "inference_ms_per_query": 72.8,
+      "params_M": 88.5,
+      "TVR_pct": 9.5
+    },
+    {
+      "model": "LMCA-TIC+TC-ADV",
+      "epoch_seconds": 1350,
+      "inference_ms_per_query": 76.5,
+      "params_M": 95.2,
+      "TVR_pct": 3.1
+    }
+  ]
+}

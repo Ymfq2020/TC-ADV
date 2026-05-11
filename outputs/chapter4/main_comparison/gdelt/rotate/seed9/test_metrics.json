@@ -1,0 +1,20 @@
+{
+  "MRR": 0.268310258663319,
+  "Hits@1": 0.20928200175738884,
+  "Hits@3": 0.356010573716826,
+  "Hits@10": 0.44240048196042187,
+  "AUC-PR": 0.21635236037125777,
+  "TVR": 0.21710824797540137,
+  "trm_violation_rate": 0.11940953638647077,
+  "ecm_violation_rate": 0.09769871158893062,
+  "fused_violation_rate": 0.21710824797540137,
+  "violation_breakdown": {
+    "TRM-only": 488,
+    "ECM-only": 326,
+    "both": 271,
+    "none": 3915
+  },
+  "model": "RotatE",
+  "dataset": "GDELT",
+  "seed": 9
+}

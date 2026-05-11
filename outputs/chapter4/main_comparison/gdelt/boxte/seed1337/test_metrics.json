@@ -1,0 +1,20 @@
+{
+  "MRR": 0.32969471336272554,
+  "Hits@1": 0.25716187642292593,
+  "Hits@3": 0.40356577444363145,
+  "Hits@10": 0.48198908151143044,
+  "AUC-PR": 0.2544107222848898,
+  "TVR": 0.18591602104110538,
+  "trm_violation_rate": 0.10225381157260797,
+  "ecm_violation_rate": 0.08366220946849742,
+  "fused_violation_rate": 0.18591602104110538,
+  "violation_breakdown": {
+    "TRM-only": 418,
+    "ECM-only": 279,
+    "both": 232,
+    "none": 4071
+  },
+  "model": "BoxTE",
+  "dataset": "GDELT",
+  "seed": 1337
+}

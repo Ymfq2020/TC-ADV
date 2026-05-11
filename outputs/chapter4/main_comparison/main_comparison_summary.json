@@ -1,0 +1,592 @@
+{
+  "datasets": {
+    "GDELT": {
+      "dataset": "GDELT",
+      "n_seeds": 5,
+      "models": {
+        "RotatE": {
+          "TVR": {
+            "mean_pct": 23.4,
+            "std_pct": 1.4
+          },
+          "MRR": {
+            "mean_pct": 27.1,
+            "std_pct": 0.31
+          },
+          "Hits@10": {
+            "mean_pct": 43.8,
+            "std_pct": 0.42
+          },
+          "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/gdelt/rotate/seed_summary.json"
+        },
+        "BoxTE": {
+          "TVR": {
+            "mean_pct": 18.1,
+            "std_pct": 1.1
+          },
+          "MRR": {
+            "mean_pct": 33.1,
+            "std_pct": 0.24
+          },
+          "Hits@10": {
+            "mean_pct": 48.7,
+            "std_pct": 0.35
+          },
+          "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/gdelt/boxte/seed_summary.json"
+        },
+        "RE-GCN": {
+          "TVR": {
+            "mean_pct": 13.8,
+            "std_pct": 0.9
+          },
+          "MRR": {
+            "mean_pct": 39.2,
+            "std_pct": 0.19
+          },
+          "Hits@10": {
+            "mean_pct": 52.1,
+            "std_pct": 0.28
+          },
+          "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/gdelt/re-gcn/seed_summary.json"
+        },
+        "RE-GCN+TC-ADV": {
+          "TVR": {
+            "mean_pct": 5.4,
+            "std_pct": 0.6
+          },
+          "MRR": {
+            "mean_pct": 40.5,
+            "std_pct": 0.21
+          },
+          "Hits@10": {
+            "mean_pct": 53.7,
+            "std_pct": 0.3
+          },
+          "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/gdelt/re-gcn_tcadv/seed_summary.json"
+        },
+        "CyGNet": {
+          "TVR": {
+            "mean_pct": 10.6,
+            "std_pct": 0.6
+          },
+          "MRR": {
+            "mean_pct": 48.1,
+            "std_pct": 0.15
+          },
+          "Hits@10": {
+            "mean_pct": 57.9,
+            "std_pct": 0.21
+          },
+          "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/gdelt/cygnet/seed_summary.json"
+        },
+        "CyGNet+TC-ADV": {
+          "TVR": {
+            "mean_pct": 4.1,
+            "std_pct": 0.5
+          },
+          "MRR": {
+            "mean_pct": 49.2,
+            "std_pct": 0.17
+          },
+          "Hits@10": {
+            "mean_pct": 59.1,
+            "std_pct": 0.23
+          },
+          "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/gdelt/cygnet_tcadv/seed_summary.json"
+        },
+        "GLTW": {
+          "TVR": {
+            "mean_pct": 14.4,
+            "std_pct": 1.0
+          },
+          "MRR": {
+            "mean_pct": 46.8,
+            "std_pct": 0.2
+          },
+          "Hits@10": {
+            "mean_pct": 56.6,
+            "std_pct": 0.27
+          },
+          "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/gdelt/gltw/seed_summary.json"
+        },
+        "GLTW+TC-ADV": {
+          "TVR": {
+            "mean_pct": 4.7,
+            "std_pct": 0.5
+          },
+          "MRR": {
+            "mean_pct": 47.9,
+            "std_pct": 0.22
+          },
+          "Hits@10": {
+            "mean_pct": 57.9,
+            "std_pct": 0.29
+          },
+          "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/gdelt/gltw_tcadv/seed_summary.json"
+        },
+        "LMCA-TIC": {
+          "TVR": {
+            "mean_pct": 9.4,
+            "std_pct": 0.5
+          },
+          "MRR": {
+            "mean_pct": 50.3,
+            "std_pct": 0.16
+          },
+          "Hits@10": {
+            "mean_pct": 60.8,
+            "std_pct": 0.2
+          },
+          "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/gdelt/lmca-tic/seed_summary.json"
+        },
+        "LMCA-TIC+TC-ADV": {
+          "TVR": {
+            "mean_pct": 2.9,
+            "std_pct": 0.3
+          },
+          "MRR": {
+            "mean_pct": 51.8,
+            "std_pct": 0.18
+          },
+          "Hits@10": {
+            "mean_pct": 62.6,
+            "std_pct": 0.21
+          },
+          "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/gdelt/lmca-tic_tcadv/seed_summary.json"
+        }
+      }
+    },
+    "ICEWS18": {
+      "dataset": "ICEWS18",
+      "n_seeds": 5,
+      "models": {
+        "RotatE": {
+          "TVR": {
+            "mean_pct": 27.9,
+            "std_pct": 1.7
+          },
+          "MRR": {
+            "mean_pct": 10.4,
+            "std_pct": 0.38
+          },
+          "Hits@10": {
+            "mean_pct": 20.9,
+            "std_pct": 0.51
+          },
+          "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/icews18/rotate/seed_summary.json"
+        },
+        "BoxTE": {
+          "TVR": {
+            "mean_pct": 14.8,
+            "std_pct": 1.4
+          },
+          "MRR": {
+            "mean_pct": 26.3,
+            "std_pct": 0.29
+          },
+          "Hits@10": {
+            "mean_pct": 29.5,
+            "std_pct": 0.37
+          },
+          "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/icews18/boxte/seed_summary.json"
+        },
+        "RE-GCN": {
+          "TVR": {
+            "mean_pct": 15.9,
+            "std_pct": 1.1
+          },
+          "MRR": {
+            "mean_pct": 42.1,
+            "std_pct": 0.22
+          },
+          "Hits@10": {
+            "mean_pct": 54.8,
+            "std_pct": 0.31
+          },
+          "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/icews18/re-gcn/seed_summary.json"
+        },
+        "RE-GCN+TC-ADV": {
+          "TVR": {
+            "mean_pct": 5.7,
+            "std_pct": 0.7
+          },
+          "MRR": {
+            "mean_pct": 43.4,
+            "std_pct": 0.24
+          },
+          "Hits@10": {
+            "mean_pct": 56.3,
+            "std_pct": 0.33
+          },
+          "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/icews18/re-gcn_tcadv/seed_summary.json"
+        },
+        "CyGNet": {
+          "TVR": {
+            "mean_pct": 11.6,
+            "std_pct": 0.8
+          },
+          "MRR": {
+            "mean_pct": 44.6,
+            "std_pct": 0.18
+          },
+          "Hits@10": {
+            "mean_pct": 55.3,
+            "std_pct": 0.24
+          },
+          "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/icews18/cygnet/seed_summary.json"
+        },
+        "CyGNet+TC-ADV": {
+          "TVR": {
+            "mean_pct": 4.5,
+            "std_pct": 0.6
+          },
+          "MRR": {
+            "mean_pct": 45.8,
+            "std_pct": 0.2
+          },
+          "Hits@10": {
+            "mean_pct": 56.7,
+            "std_pct": 0.26
+          },
+          "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/icews18/cygnet_tcadv/seed_summary.json"
+        },
+        "GLTW": {
+          "TVR": {
+            "mean_pct": 16.4,
+            "std_pct": 1.2
+          },
+          "MRR": {
+            "mean_pct": 43.1,
+            "std_pct": 0.23
+          },
+          "Hits@10": {
+            "mean_pct": 52.6,
+            "std_pct": 0.32
+          },
+          "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/icews18/gltw/seed_summary.json"
+        },
+        "GLTW+TC-ADV": {
+          "TVR": {
+            "mean_pct": 5.4,
+            "std_pct": 0.6
+          },
+          "MRR": {
+            "mean_pct": 44.2,
+            "std_pct": 0.25
+          },
+          "Hits@10": {
+            "mean_pct": 53.9,
+            "std_pct": 0.34
+          },
+          "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/icews18/gltw_tcadv/seed_summary.json"
+        },
+        "LMCA-TIC": {
+          "TVR": {
+            "mean_pct": 9.5,
+            "std_pct": 0.7
+          },
+          "MRR": {
+            "mean_pct": 46.9,
+            "std_pct": 0.17
+          },
+          "Hits@10": {
+            "mean_pct": 58.9,
+            "std_pct": 0.26
+          },
+          "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/icews18/lmca-tic/seed_summary.json"
+        },
+        "LMCA-TIC+TC-ADV": {
+          "TVR": {
+            "mean_pct": 3.1,
+            "std_pct": 0.4
+          },
+          "MRR": {
+            "mean_pct": 49.1,
+            "std_pct": 0.16
+          },
+          "Hits@10": {
+            "mean_pct": 60.7,
+            "std_pct": 0.27
+          },
+          "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/icews18/lmca-tic_tcadv/seed_summary.json"
+        }
+      }
+    }
+  },
+  "paired_tests": {
+    "GDELT": {
+      "RE-GCN → RE-GCN+TC-ADV": {
+        "MRR": {
+          "n": 5,
+          "t": 9.170498126626358,
+          "df": 4,
+          "p_two_sided": 0.0007850782814466231,
+          "mean_diff_pct": 1.2999999999999972,
+          "ci95_low_pct": 0.9064141132881998,
+          "ci95_high_pct": 1.6935858867117946
+        },
+        "Hits@10": {
+          "n": 5,
+          "t": 7.8813745009211456,
+          "df": 4,
+          "p_two_sided": 0.0014012406626751758,
+          "mean_diff_pct": 1.6000000000000028,
+          "ci95_low_pct": 1.0363531173658556,
+          "ci95_high_pct": 2.1636468826341497
+        },
+        "TVR": {
+          "n": 5,
+          "t": -28.292391205335637,
+          "df": 4,
+          "p_two_sided": 9.286759982181882e-06,
+          "mean_diff_pct": -8.4,
+          "ci95_low_pct": -9.224325477277548,
+          "ci95_high_pct": -7.575674522722453
+        }
+      },
+      "CyGNet → CyGNet+TC-ADV": {
+        "MRR": {
+          "n": 5,
+          "t": 13.156882433901156,
+          "df": 4,
+          "p_two_sided": 0.00019275067624402865,
+          "mean_diff_pct": 1.0999999999999985,
+          "ci95_low_pct": 0.8678713303808092,
+          "ci95_high_pct": 1.3321286696191879
+        },
+        "Hits@10": {
+          "n": 5,
+          "t": 6.932871189142901,
+          "df": 4,
+          "p_two_sided": 0.002272689686341035,
+          "mean_diff_pct": 1.200000000000007,
+          "ci95_low_pct": 0.7194293914684419,
+          "ci95_high_pct": 1.6805706085315721
+        },
+        "TVR": {
+          "n": 5,
+          "t": -23.613229478729725,
+          "df": 4,
+          "p_two_sided": 1.907018457147678e-05,
+          "mean_diff_pct": -6.5,
+          "ci95_low_pct": -7.264270435775921,
+          "ci95_high_pct": -5.735729564224079
+        }
+      },
+      "GLTW → GLTW+TC-ADV": {
+        "MRR": {
+          "n": 5,
+          "t": 20.437716562292913,
+          "df": 4,
+          "p_two_sided": 3.384713033737327e-05,
+          "mean_diff_pct": 1.1000000000000014,
+          "ci95_low_pct": 0.9505660059229779,
+          "ci95_high_pct": 1.249433994077025
+        },
+        "Hits@10": {
+          "n": 5,
+          "t": 5.593282687230728,
+          "df": 4,
+          "p_two_sided": 0.00501388430743431,
+          "mean_diff_pct": 1.2999999999999985,
+          "ci95_low_pct": 0.6546940430890056,
+          "ci95_high_pct": 1.9453059569109914
+        },
+        "TVR": {
+          "n": 5,
+          "t": -20.33334041836812,
+          "df": 4,
+          "p_two_sided": 3.45418601724775e-05,
+          "mean_diff_pct": -9.700000000000001,
+          "ci95_low_pct": -11.024500400145268,
+          "ci95_high_pct": -8.375499599854734
+        }
+      },
+      "LMCA-TIC → LMCA-TIC+TC-ADV": {
+        "MRR": {
+          "n": 5,
+          "t": 30.445296678951266,
+          "df": 4,
+          "p_two_sided": 6.933511964058262e-06,
+          "mean_diff_pct": 1.4999999999999987,
+          "ci95_low_pct": 1.363208176234459,
+          "ci95_high_pct": 1.6367918237655383
+        },
+        "Hits@10": {
+          "n": 5,
+          "t": 21.005132806603438,
+          "df": 4,
+          "p_two_sided": 3.03609790060954e-05,
+          "mean_diff_pct": 1.8000000000000085,
+          "ci95_low_pct": 1.5620771439357553,
+          "ci95_high_pct": 2.0379228560642617
+        },
+        "TVR": {
+          "n": 5,
+          "t": -28.60900148738266,
+          "df": 4,
+          "p_two_sided": 8.88405581158394e-06,
+          "mean_diff_pct": -6.5,
+          "ci95_low_pct": -7.130811711193233,
+          "ci95_high_pct": -5.869188288806767
+        }
+      }
+    },
+    "ICEWS18": {
+      "RE-GCN → RE-GCN+TC-ADV": {
+        "MRR": {
+          "n": 5,
+          "t": 13.792254563187822,
+          "df": 4,
+          "p_two_sided": 0.00016015525585578357,
+          "mean_diff_pct": 1.2999999999999972,
+          "ci95_low_pct": 1.0383039429687768,
+          "ci95_high_pct": 1.5616960570312175
+        },
+        "Hits@10": {
+          "n": 5,
+          "t": 12.390482624641772,
+          "df": 4,
+          "p_two_sided": 0.0002438770620656911,
+          "mean_diff_pct": 1.5,
+          "ci95_low_pct": 1.1638817240650396,
+          "ci95_high_pct": 1.8361182759349604
+        },
+        "TVR": {
+          "n": 5,
+          "t": -24.288320287874246,
+          "df": 4,
+          "p_two_sided": 1.7047836594869546e-05,
+          "mean_diff_pct": -10.2,
+          "ci95_low_pct": -11.365981827370573,
+          "ci95_high_pct": -9.034018172629425
+        }
+      },
+      "CyGNet → CyGNet+TC-ADV": {
+        "MRR": {
+          "n": 5,
+          "t": 7.7351453676536055,
+          "df": 4,
+          "p_two_sided": 0.0015044328494677821,
+          "mean_diff_pct": 1.1999999999999929,
+          "ci95_low_pct": 0.7692732369103452,
+          "ci95_high_pct": 1.6307267630896405
+        },
+        "Hits@10": {
+          "n": 5,
+          "t": 8.573988592334901,
+          "df": 4,
+          "p_two_sided": 0.0010163111529723585,
+          "mean_diff_pct": 1.4000000000000044,
+          "ci95_low_pct": 0.9466493679788834,
+          "ci95_high_pct": 1.8533506320211253
+        },
+        "TVR": {
+          "n": 5,
+          "t": -13.666297458950119,
+          "df": 4,
+          "p_two_sided": 0.00016603610587481626,
+          "mean_diff_pct": -7.1,
+          "ci95_low_pct": -8.542436058933745,
+          "ci95_high_pct": -5.657563941066255
+        }
+      },
+      "GLTW → GLTW+TC-ADV": {
+        "MRR": {
+          "n": 5,
+          "t": 6.840896680164203,
+          "df": 4,
+          "p_two_sided": 0.0023890851663283534,
+          "mean_diff_pct": 1.1000000000000028,
+          "ci95_low_pct": 0.6535541964004281,
+          "ci95_high_pct": 1.5464458035995774
+        },
+        "Hits@10": {
+          "n": 5,
+          "t": 5.125939244804154,
+          "df": 4,
+          "p_two_sided": 0.006857797969396469,
+          "mean_diff_pct": 1.2999999999999985,
+          "ci95_low_pct": 0.5958600435196876,
+          "ci95_high_pct": 2.0041399564803095
+        },
+        "TVR": {
+          "n": 5,
+          "t": -20.180465586232195,
+          "df": 4,
+          "p_two_sided": 3.5591837213331436e-05,
+          "mean_diff_pct": -10.999999999999998,
+          "ci95_low_pct": -12.513389075523195,
+          "ci95_high_pct": -9.486610924476802
+        }
+      },
+      "LMCA-TIC → LMCA-TIC+TC-ADV": {
+        "MRR": {
+          "n": 5,
+          "t": 17.82618676184265,
+          "df": 4,
+          "p_two_sided": 5.819165863466214e-05,
+          "mean_diff_pct": 2.200000000000004,
+          "ci95_low_pct": 1.85734796156687,
+          "ci95_high_pct": 2.5426520384331384
+        },
+        "Hits@10": {
+          "n": 5,
+          "t": 9.989180104579535,
+          "df": 4,
+          "p_two_sided": 0.0005643639998310253,
+          "mean_diff_pct": 1.8000000000000071,
+          "ci95_low_pct": 1.2996985601386033,
+          "ci95_high_pct": 2.300301439861411
+        },
+        "TVR": {
+          "n": 5,
+          "t": -18.233417409539037,
+          "df": 4,
+          "p_two_sided": 5.3213276145086236e-05,
+          "mean_diff_pct": -6.4,
+          "ci95_low_pct": -7.374542965487623,
+          "ci95_high_pct": -5.425457034512378
+        }
+      }
+    },
+    "paper_cited_lmca_tcadv": {
+      "GDELT": {
+        "MRR": {
+          "t": 6.83,
+          "df": 4,
+          "p_two_sided": 0.0024,
+          "mean_diff_pct": 1.6,
+          "ci95_low_pct": 1.07,
+          "ci95_high_pct": 2.13
+        },
+        "TVR": {
+          "t": -12.7,
+          "df": 4,
+          "p_two_sided": 0.00021,
+          "mean_diff_pct": -6.7,
+          "ci95_low_pct": -7.81,
+          "ci95_high_pct": -5.59
+        }
+      },
+      "ICEWS18": {
+        "MRR": {
+          "t": 8.41,
+          "df": 4,
+          "p_two_sided": 0.0011,
+          "mean_diff_pct": 2.2,
+          "ci95_low_pct": 1.71,
+          "ci95_high_pct": 2.69
+        },
+        "TVR": {
+          "t": -11.3,
+          "df": 4,
+          "p_two_sided": 0.00035,
+          "mean_diff_pct": -6.1,
+          "ci95_low_pct": -7.04,
+          "ci95_high_pct": -5.16
+        }
+      }
+    }
+  }
+}

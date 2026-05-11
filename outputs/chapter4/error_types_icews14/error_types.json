@@ -1,0 +1,20 @@
+{
+  "diagnostics_path": "outputs/chapter4/main_comparison/icews14/lmca-tic-tc-adv/seed42/test_diagnostics.json",
+  "violation_threshold": 0.7,
+  "total_high_confidence_errors": 1248,
+  "counts": {
+    "lifecycle_out_of_bounds": 649,
+    "evolution_mutation": 424,
+    "static_semantic_conflict": 175
+  },
+  "distribution": {
+    "lifecycle_out_of_bounds": 0.5200320512820513,
+    "evolution_mutation": 0.33974358974358976,
+    "static_semantic_conflict": 0.14022435897435898
+  },
+  "labels_zh": {
+    "lifecycle_out_of_bounds": "生命周期越界",
+    "evolution_mutation": "演化轨迹反常突变",
+    "static_semantic_conflict": "静态语义冲突"
+  }
+}

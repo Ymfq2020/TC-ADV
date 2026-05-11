@@ -1,0 +1,20 @@
+{
+  "MRR": 0.5162067580284354,
+  "Hits@1": 0.40264127126217963,
+  "Hits@3": 0.5606395060747557,
+  "Hits@10": 0.6251503049142051,
+  "AUC-PR": 0.37004818997762995,
+  "TVR": 0.031430153441967555,
+  "trm_violation_rate": 0.017286584393082158,
+  "ecm_violation_rate": 0.014143569048885397,
+  "fused_violation_rate": 0.031430153441967555,
+  "violation_breakdown": {
+    "TRM-only": 71,
+    "ECM-only": 47,
+    "both": 39,
+    "none": 4843
+  },
+  "model": "LMCA-TIC+TC-ADV",
+  "dataset": "GDELT",
+  "seed": 2024
+}

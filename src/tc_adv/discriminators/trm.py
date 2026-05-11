@@ -125,7 +125,7 @@ class TemporalRationalityModule(_BaseModule):
                     dtype=torch.float32,
                     device=device,
                 )
-            validity = torch.sigmoid(self.linear(features)).squeeze(-1)
+            validity = torch.sigmoid(self._monotonic_linear(features)).squeeze(-1)
             if hasattr(subject_scores, "shape"):
                 return 1.0 - validity
             return float((1.0 - validity).item())
@@ -147,3 +147,9 @@ class TemporalRationalityModule(_BaseModule):
             "object_scores": object_scores,
             "probabilities": self.probability_from_scores(subject_scores, object_scores),
         }
+
+    def _monotonic_linear(self, features):
+        if torch is None:
+            raise RuntimeError("_monotonic_linear requires torch.")
+        positive_weight = torch.nn.functional.softplus(self.linear.weight)
+        return features @ positive_weight.transpose(0, 1) + self.linear.bias

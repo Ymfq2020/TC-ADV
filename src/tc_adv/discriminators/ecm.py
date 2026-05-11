@@ -147,8 +147,20 @@ class EvolutionaryConsistencyModule(_BaseModule):
             key_padding_mask = None
             if history_mask is not None:
                 key_padding_mask = ~history_mask.bool()
-            context, _ = self.attn(query, states, states, key_padding_mask=key_padding_mask)
-            context = context.squeeze(1)
+            if key_padding_mask is not None and key_padding_mask.all(dim=1).any():
+                context = torch.zeros((batch_size, self.hidden_dim), dtype=subject_embed.dtype, device=subject_embed.device)
+                valid_rows = ~key_padding_mask.all(dim=1)
+                if valid_rows.any():
+                    valid_context, _ = self.attn(
+                        query[valid_rows],
+                        states[valid_rows],
+                        states[valid_rows],
+                        key_padding_mask=key_padding_mask[valid_rows],
+                    )
+                    context[valid_rows] = valid_context.squeeze(1)
+            else:
+                context, _ = self.attn(query, states, states, key_padding_mask=key_padding_mask)
+                context = context.squeeze(1)
         e_fake = subject_embed + relation_embed - object_embed
         logits = self.mlp(torch.cat([context, e_fake], dim=-1)).squeeze(-1)
         return torch.sigmoid(logits)

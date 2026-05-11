@@ -1,0 +1,9 @@
+{
+  "dataset": "ICEWS14",
+  "sample_interval_epochs": 5,
+  "max_epochs": 100,
+  "final": {
+    "L_adv": 0.462,
+    "valid_mrr_pct": 48.7
+  }
+}

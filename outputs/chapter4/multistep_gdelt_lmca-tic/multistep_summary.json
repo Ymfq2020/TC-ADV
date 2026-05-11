@@ -1,0 +1,49 @@
+{
+  "base_config": "configs/experiments/full_gdelt.yaml",
+  "dataset": "GDELT",
+  "model": "LMCA-TIC",
+  "max_steps": 5,
+  "rows": [
+    {
+      "step": 1,
+      "horizon": "t+1",
+      "MRR": 0.503,
+      "Hits@10": 0.608,
+      "MRR_std_pct": 0.28,
+      "Hits@10_std_pct": 0.37
+    },
+    {
+      "step": 2,
+      "horizon": "t+2",
+      "MRR": 0.465,
+      "Hits@10": 0.569,
+      "MRR_std_pct": 0.34,
+      "Hits@10_std_pct": 0.43
+    },
+    {
+      "step": 3,
+      "horizon": "t+3",
+      "MRR": 0.42100000000000004,
+      "Hits@10": 0.535,
+      "MRR_std_pct": 0.41,
+      "Hits@10_std_pct": 0.49
+    },
+    {
+      "step": 4,
+      "horizon": "t+4",
+      "MRR": 0.389,
+      "Hits@10": 0.494,
+      "MRR_std_pct": 0.48,
+      "Hits@10_std_pct": 0.55
+    },
+    {
+      "step": 5,
+      "horizon": "t+5",
+      "MRR": 0.365,
+      "Hits@10": 0.456,
+      "MRR_std_pct": 0.54,
+      "Hits@10_std_pct": 0.62
+    }
+  ],
+  "decay_pct": -27.44
+}

@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-import math
 import os
 import random
 import time
+from copy import copy
+from dataclasses import replace
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -25,7 +26,7 @@ from tc_adv.config.schemas import TCADVExperimentConfig
 from tc_adv.discriminators.ecm import EvolutionaryConsistencyModule
 from tc_adv.discriminators.fusion import classify_violation, fuse_violation_probabilities
 from tc_adv.discriminators.trm import TemporalRationalityModule
-from tc_adv.training.backend import GeneratorContext, build_generator_backend
+from tc_adv.training.backend import build_generator_backend
 from tc_adv.training.objectives import StepRatioScheduler, anneal_temperature, gumbel_softmax, relu_margin_loss
 from tc_adv.utils.io import ensure_dir, write_json, write_jsonl
 from tc_adv.utils.logging import build_logger, capture_manifest, write_manifest
@@ -116,10 +117,8 @@ class TCADVTrainer:
             epoch_g_loss = 0.0
             epoch_d_loss = 0.0
             steps = 0
-            phase_trace: list[str] = []
             for sample in self.generator.train_dataset.samples:
                 for phase in self.scheduler.cycle():
-                    phase_trace.append(phase)
                     if phase == "G":
                         epoch_g_loss += float(self._generator_step(sample))
                     else:
@@ -135,7 +134,7 @@ class TCADVTrainer:
                 "valid_tvr": float(valid_metrics["TVR"]),
                 "temperature": float(self.temperature),
                 "step_time_sec": float(step_time),
-                "phase_trace_length": len(phase_trace),
+                "phase_trace_length": len(self.generator.train_dataset.samples) * len(self.scheduler.cycle()),
             }
             train_history.append(record)
             violation_history.append(
@@ -234,7 +233,6 @@ class TCADVTrainer:
         return metrics
 
     def evaluate_with_noise(self, split: str = "test", checkpoint_name: str | None = None, sigma: float = 1.0) -> dict[str, float]:
-        import random
         if checkpoint_name:
             self._load_checkpoint_pair(checkpoint_name)
         dataset = {
@@ -246,22 +244,24 @@ class TCADVTrainer:
         predictions: list[dict[str, Any]] = []
 
         for sample in dataset.samples:
-            original_ts = sample.quadruple.timestamp
+            noisy_sample = copy(sample)
+            noisy_sample.quadruple = replace(sample.quadruple)
             if random.random() < 0.5:
                 noise = random.gauss(0, sigma)
-                sample.quadruple.timestamp = int(round(original_ts + noise))
-                
-            scores = self.generator.score_candidates(sample)
+                noisy_sample.quadruple = replace(
+                    noisy_sample.quadruple,
+                    timestamp=int(round(sample.quadruple.timestamp + noise)),
+                )
+            scores = self.generator.score_candidates(noisy_sample)
             predictions.append(
                 {
-                    "subject": sample.quadruple.subject,
-                    "relation": sample.quadruple.relation,
-                    "timestamp": sample.quadruple.timestamp,
-                    "gold": sample.quadruple.object,
+                    "subject": noisy_sample.quadruple.subject,
+                    "relation": noisy_sample.quadruple.relation,
+                    "timestamp": noisy_sample.quadruple.timestamp,
+                    "gold": noisy_sample.quadruple.object,
                     "scores": scores,
                 }
             )
-            sample.quadruple.timestamp = original_ts
 
         metrics = evaluator.evaluate(predictions).to_dict()
         noise_name = str(sigma).replace(".", "p")
@@ -278,54 +278,42 @@ class TCADVTrainer:
             "test": self.generator.test_dataset,
         }[split]
         evaluator = self.bridge.create_filtered_evaluator(self.generator.filtered_targets)
-        
         samples = sorted(dataset.samples, key=lambda s: s.quadruple.timestamp)
-        metrics_by_step = {}
-        predictions = []
-        
+        if not samples:
+            return {}
+        metrics_by_step: dict[int, dict[str, float]] = {}
+        predictions: list[dict[str, Any]] = []
+        horizon_groups = self._group_samples_by_horizon(samples=samples, max_steps=max_steps)
+        rollout_history = [self._clone_sample(sample) for sample in self.generator.train_dataset.samples]
+
         for step in range(1, max_steps + 1):
-            if step == 1:
-                for sample in samples:
-                    scores = self.generator.score_candidates(sample)
-                    predictions.append(
-                        {
-                            "subject": sample.quadruple.subject,
-                            "relation": sample.quadruple.relation,
-                            "timestamp": sample.quadruple.timestamp,
-                            "gold": sample.quadruple.object,
-                            "scores": scores,
-                            "top1": max(scores.items(), key=lambda x: x[1])[0] if scores else None
-                        }
+            horizon_samples = horizon_groups.get(step, [])
+            predictions = []
+            for sample in horizon_samples:
+                query_sample = self._rebuild_query_sample(base_sample=sample, history=rollout_history)
+                scores = self.generator.score_candidates(query_sample)
+                top1 = max(scores.items(), key=lambda x: x[1])[0] if scores else None
+                predictions.append(
+                    {
+                        "subject": query_sample.quadruple.subject,
+                        "relation": query_sample.quadruple.relation,
+                        "timestamp": query_sample.quadruple.timestamp,
+                        "gold": query_sample.quadruple.object,
+                        "scores": scores,
+                        "top1": top1,
+                    }
+                )
+                if top1 is not None:
+                    rollout_history.append(
+                        self._rollout_fact_sample(
+                            base_sample=query_sample,
+                            predicted_object=top1,
+                            history=rollout_history,
+                        )
                     )
-                metrics = evaluator.evaluate(predictions).to_dict()
-                metrics_by_step[step] = metrics
-                write_json(self.output_dir / f"{split}_multistep_{step}_metrics.json", metrics)
-            else:
-                import copy
-                prev_preds = predictions
-                predictions = []
-                for i, sample in enumerate(samples):
-                    fake_sample = copy.copy(sample)
-                    prev_top1 = prev_preds[i]["top1"]
-                    if prev_top1 is not None:
-                        fake_sample.relation_history = list(sample.relation_history) + [1.0]
-                        fake_sample.subject_neighbors = list(sample.subject_neighbors) + [prev_top1]
-                        
-                    scores = self.generator.score_candidates(fake_sample)
-                    predictions.append(
-                        {
-                            "subject": sample.quadruple.subject,
-                            "relation": sample.quadruple.relation,
-                            "timestamp": sample.quadruple.timestamp + (step - 1),
-                            "gold": sample.quadruple.object,
-                            "scores": scores,
-                            "top1": max(scores.items(), key=lambda x: x[1])[0] if scores else None
-                        }
-                    )
-                metrics = evaluator.evaluate(predictions).to_dict()
-                metrics_by_step[step] = metrics
-                write_json(self.output_dir / f"{split}_multistep_{step}_metrics.json", metrics)
-                
+            metrics = evaluator.evaluate(predictions).to_dict()
+            metrics_by_step[step] = metrics
+            write_json(self.output_dir / f"{split}_multistep_{step}_metrics.json", metrics)
         return metrics_by_step
 
 
@@ -450,36 +438,22 @@ class TCADVTrainer:
         self._freeze_generator()
         self._unfreeze_discriminator()
         self.discriminator_optimizer.zero_grad()
-        positive = self._violation_probabilities(sample=sample, candidate_ids=[sample.quadruple.object], requires_grad=False)
-        negative = self._violation_probabilities(sample=sample, candidate_ids=fake_candidates, requires_grad=False)
+        positive = self._violation_probabilities(sample=sample, candidate_ids=[sample.quadruple.object], requires_grad=True)
+        negative = self._violation_probabilities(sample=sample, candidate_ids=fake_candidates, requires_grad=True)
         zero_target = torch.zeros_like(positive["p_fake"])
         one_target = torch.ones_like(negative["p_fake"])
-        loss = (
-            self.discriminator_loss_fn(positive["p_trm"], zero_target)
-            + self.discriminator_loss_fn(positive["p_ecm"], zero_target)
-            + self.discriminator_loss_fn(positive["p_fake"], zero_target)
-        )
+        loss = self.discriminator_loss_fn(positive["p_fake"], zero_target)
         if fake_candidates:
-            loss = loss + (
-                self.discriminator_loss_fn(negative["p_trm"], one_target)
-                + self.discriminator_loss_fn(negative["p_ecm"], one_target)
-                + self.discriminator_loss_fn(negative["p_fake"], one_target)
-            )
+            loss = loss + self.discriminator_loss_fn(negative["p_fake"], one_target)
         loss.backward()
         self.discriminator_optimizer.step()
         return float(loss.item())
 
     def _discriminator_step_fallback(self, sample, fake_candidates: list[str]) -> float:
         positive = self._violation_probabilities(sample=sample, candidate_ids=[sample.quadruple.object], requires_grad=False)
-        loss = (
-            float(positive["p_trm"][0]) ** 2
-            + float(positive["p_ecm"][0]) ** 2
-            + float(positive["p_fake"][0]) ** 2
-        )
+        loss = float(positive["p_fake"][0]) ** 2
         if fake_candidates:
             negative = self._violation_probabilities(sample=sample, candidate_ids=fake_candidates, requires_grad=False)
-            loss += sum((1.0 - float(value)) ** 2 for value in negative["p_trm"])
-            loss += sum((1.0 - float(value)) ** 2 for value in negative["p_ecm"])
             loss += sum((1.0 - float(value)) ** 2 for value in negative["p_fake"])
         return loss
 
@@ -517,6 +491,10 @@ class TCADVTrainer:
             else:
                 p_ecm = torch.zeros_like(subject_tensor)
             p_fake = fuse_violation_probabilities(p_trm, p_ecm, self.config.tc_adv.fusion.gamma)
+            if not requires_grad:
+                p_trm = p_trm.detach()
+                p_ecm = p_ecm.detach()
+                p_fake = p_fake.detach()
             return {"p_trm": p_trm, "p_ecm": p_ecm, "p_fake": p_fake}
         if self._module_enabled("trm"):
             p_trm = self.trm.probability_from_scores(subject_scores, object_scores)
@@ -603,3 +581,123 @@ class TCADVTrainer:
             if enabled and not (parameter.is_floating_point() or parameter.is_complex()):
                 continue
             parameter.requires_grad = enabled
+
+    @staticmethod
+    def _clone_sample(sample):
+        cloned = copy(sample)
+        cloned.quadruple = replace(sample.quadruple)
+        cloned.extra = dict(sample.extra)
+        cloned.relation_history = list(sample.relation_history)
+        cloned.subject_neighbors = list(sample.subject_neighbors)
+        if hasattr(sample, "object_neighbors"):
+            cloned.object_neighbors = list(sample.object_neighbors)
+        if hasattr(sample, "subject_neighbor_relations"):
+            cloned.subject_neighbor_relations = list(sample.subject_neighbor_relations)
+        if hasattr(sample, "object_neighbor_relations"):
+            cloned.object_neighbor_relations = list(sample.object_neighbor_relations)
+        return cloned
+
+    def _group_samples_by_horizon(self, samples, max_steps: int) -> dict[int, list[Any]]:
+        grouped: dict[int, list[Any]] = {step: [] for step in range(1, max_steps + 1)}
+        by_subject_relation: dict[tuple[str, str], list[Any]] = {}
+        for sample in samples:
+            key = (sample.quadruple.subject, sample.quadruple.relation)
+            by_subject_relation.setdefault(key, []).append(sample)
+        for sample_group in by_subject_relation.values():
+            ordered = sorted(sample_group, key=lambda item: item.quadruple.timestamp)
+            for start_idx, sample in enumerate(ordered):
+                for step in range(1, max_steps + 1):
+                    target_idx = start_idx + step - 1
+                    if target_idx >= len(ordered):
+                        break
+                    grouped[step].append(self._clone_sample(ordered[target_idx]))
+        return grouped
+
+    def _rollout_fact_sample(self, base_sample, predicted_object: str, history):
+        lmca_types = self._resolve_lmca_types()
+        quadruple = lmca_types.TemporalQuadruple(
+            subject=base_sample.quadruple.subject,
+            relation=base_sample.quadruple.relation,
+            object=predicted_object,
+            timestamp=int(base_sample.quadruple.timestamp),
+            split=base_sample.quadruple.split,
+            is_inductive=getattr(base_sample.quadruple, "is_inductive", False),
+        )
+        return self._build_sample_from_history(quadruple=quadruple, history=history, lmca_types=lmca_types)
+
+    def _rebuild_query_sample(self, base_sample, history):
+        lmca_types = self._resolve_lmca_types()
+        quadruple = lmca_types.TemporalQuadruple(
+            subject=base_sample.quadruple.subject,
+            relation=base_sample.quadruple.relation,
+            object=base_sample.quadruple.object,
+            timestamp=int(base_sample.quadruple.timestamp),
+            split=base_sample.quadruple.split,
+            is_inductive=getattr(base_sample.quadruple, "is_inductive", False),
+        )
+        return self._build_sample_from_history(quadruple=quadruple, history=history, lmca_types=lmca_types)
+
+    def _build_sample_from_history(self, quadruple, history, lmca_types):
+        history_prefix = [
+            item.quadruple
+            for item in sorted(history, key=lambda sample: sample.quadruple.timestamp)
+            if item.quadruple.timestamp <= quadruple.timestamp
+        ]
+        subject_record = self.generator.base_trainer.bie_records.get(
+            quadruple.subject,
+            lmca_types.empty_bie_record(quadruple.subject),
+        )
+        object_record = self.generator.base_trainer.bie_records.get(
+            quadruple.object,
+            lmca_types.empty_bie_record(quadruple.object),
+        )
+        relation_history = lmca_types.relation_history_vector(
+            history_prefix,
+            quadruple.relation,
+            quadruple.timestamp,
+        )
+        (
+            subject_neighbors,
+            subject_neighbor_relations,
+            subject_neighbor_deltas,
+            object_neighbors,
+            object_neighbor_relations,
+            object_neighbor_deltas,
+        ) = lmca_types.sample_temporal_neighbors(
+            history=history_prefix,
+            subject=quadruple.subject,
+            obj=quadruple.object,
+            timestamp=quadruple.timestamp,
+            window_days=self.base_config.model.tgn_time_window_days,
+            max_neighbors=self.base_config.model.tgn_neighbor_size,
+        )
+        return lmca_types.ProcessedSample(
+            quadruple=quadruple,
+            subject_prompt=self.generator.base_trainer._entity_prompt(quadruple.subject),
+            object_prompt=self.generator.base_trainer._entity_prompt(quadruple.object),
+            relation_history=relation_history,
+            subject_neighbors=subject_neighbors,
+            object_neighbors=object_neighbors,
+            subject_neighbor_relations=subject_neighbor_relations,
+            object_neighbor_relations=object_neighbor_relations,
+            subject_types=lmca_types.extract_entity_types(subject_record, self.base_config.ontology_keys),
+            object_types=lmca_types.extract_entity_types(object_record, self.base_config.ontology_keys),
+            extra={
+                "subject_neighbor_deltas": subject_neighbor_deltas,
+                "object_neighbor_deltas": object_neighbor_deltas,
+            },
+        )
+
+    def _resolve_lmca_types(self):
+        symbols = self.bridge.validate()
+        preprocess_mod = __import__("lmca_tic.data.preprocess", fromlist=["empty_bie_record", "relation_history_vector", "sample_temporal_neighbors", "extract_entity_types"])
+        types_mod = __import__("lmca_tic.data.types", fromlist=["ProcessedSample", "TemporalQuadruple"])
+        return SimpleNamespace(
+            ProcessedSample=getattr(types_mod, "ProcessedSample"),
+            TemporalQuadruple=getattr(types_mod, "TemporalQuadruple"),
+            empty_bie_record=getattr(preprocess_mod, "empty_bie_record"),
+            relation_history_vector=getattr(preprocess_mod, "relation_history_vector"),
+            sample_temporal_neighbors=getattr(preprocess_mod, "sample_temporal_neighbors"),
+            extract_entity_types=getattr(preprocess_mod, "extract_entity_types"),
+            bridge_symbols=symbols,
+        )

@@ -1,0 +1,20 @@
+{
+  "MRR": 0.40220908630794994,
+  "Hits@1": 0.313723087320201,
+  "Hits@3": 0.4640716362432346,
+  "Hits@10": 0.5366251272616283,
+  "AUC-PR": 0.29936963351092893,
+  "TVR": 0.05803469072398554,
+  "trm_violation_rate": 0.03191907989819205,
+  "ecm_violation_rate": 0.02611561082579349,
+  "fused_violation_rate": 0.05803469072398554,
+  "violation_breakdown": {
+    "TRM-only": 131,
+    "ECM-only": 87,
+    "both": 73,
+    "none": 4709
+  },
+  "model": "RE-GCN+TC-ADV",
+  "dataset": "GDELT",
+  "seed": 9
+}

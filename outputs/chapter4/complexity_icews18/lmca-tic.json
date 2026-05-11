@@ -1,0 +1,9 @@
+{
+  "model": "LMCA-TIC",
+  "params_M": 88.5,
+  "params_total": 88500000,
+  "epoch_seconds": 1050,
+  "avg_train_step_ms": 10.5,
+  "inference_ms_per_query": 72.8,
+  "TVR_pct": 9.5
+}

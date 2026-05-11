@@ -1,0 +1,156 @@
+{
+  "dataset": "ICEWS18",
+  "n_seeds": 5,
+  "models": {
+    "RotatE": {
+      "TVR": {
+        "mean_pct": 27.9,
+        "std_pct": 1.7
+      },
+      "MRR": {
+        "mean_pct": 10.4,
+        "std_pct": 0.38
+      },
+      "Hits@10": {
+        "mean_pct": 20.9,
+        "std_pct": 0.51
+      },
+      "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/icews18/rotate/seed_summary.json"
+    },
+    "BoxTE": {
+      "TVR": {
+        "mean_pct": 14.8,
+        "std_pct": 1.4
+      },
+      "MRR": {
+        "mean_pct": 26.3,
+        "std_pct": 0.29
+      },
+      "Hits@10": {
+        "mean_pct": 29.5,
+        "std_pct": 0.37
+      },
+      "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/icews18/boxte/seed_summary.json"
+    },
+    "RE-GCN": {
+      "TVR": {
+        "mean_pct": 15.9,
+        "std_pct": 1.1
+      },
+      "MRR": {
+        "mean_pct": 42.1,
+        "std_pct": 0.22
+      },
+      "Hits@10": {
+        "mean_pct": 54.8,
+        "std_pct": 0.31
+      },
+      "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/icews18/re-gcn/seed_summary.json"
+    },
+    "RE-GCN+TC-ADV": {
+      "TVR": {
+        "mean_pct": 5.7,
+        "std_pct": 0.7
+      },
+      "MRR": {
+        "mean_pct": 43.4,
+        "std_pct": 0.24
+      },
+      "Hits@10": {
+        "mean_pct": 56.3,
+        "std_pct": 0.33
+      },
+      "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/icews18/re-gcn_tcadv/seed_summary.json"
+    },
+    "CyGNet": {
+      "TVR": {
+        "mean_pct": 11.6,
+        "std_pct": 0.8
+      },
+      "MRR": {
+        "mean_pct": 44.6,
+        "std_pct": 0.18
+      },
+      "Hits@10": {
+        "mean_pct": 55.3,
+        "std_pct": 0.24
+      },
+      "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/icews18/cygnet/seed_summary.json"
+    },
+    "CyGNet+TC-ADV": {
+      "TVR": {
+        "mean_pct": 4.5,
+        "std_pct": 0.6
+      },
+      "MRR": {
+        "mean_pct": 45.8,
+        "std_pct": 0.2
+      },
+      "Hits@10": {
+        "mean_pct": 56.7,
+        "std_pct": 0.26
+      },
+      "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/icews18/cygnet_tcadv/seed_summary.json"
+    },
+    "GLTW": {
+      "TVR": {
+        "mean_pct": 16.4,
+        "std_pct": 1.2
+      },
+      "MRR": {
+        "mean_pct": 43.1,
+        "std_pct": 0.23
+      },
+      "Hits@10": {
+        "mean_pct": 52.6,
+        "std_pct": 0.32
+      },
+      "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/icews18/gltw/seed_summary.json"
+    },
+    "GLTW+TC-ADV": {
+      "TVR": {
+        "mean_pct": 5.4,
+        "std_pct": 0.6
+      },
+      "MRR": {
+        "mean_pct": 44.2,
+        "std_pct": 0.25
+      },
+      "Hits@10": {
+        "mean_pct": 53.9,
+        "std_pct": 0.34
+      },
+      "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/icews18/gltw_tcadv/seed_summary.json"
+    },
+    "LMCA-TIC": {
+      "TVR": {
+        "mean_pct": 9.5,
+        "std_pct": 0.7
+      },
+      "MRR": {
+        "mean_pct": 46.9,
+        "std_pct": 0.17
+      },
+      "Hits@10": {
+        "mean_pct": 58.9,
+        "std_pct": 0.26
+      },
+      "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/icews18/lmca-tic/seed_summary.json"
+    },
+    "LMCA-TIC+TC-ADV": {
+      "TVR": {
+        "mean_pct": 3.1,
+        "std_pct": 0.4
+      },
+      "MRR": {
+        "mean_pct": 49.1,
+        "std_pct": 0.16
+      },
+      "Hits@10": {
+        "mean_pct": 60.7,
+        "std_pct": 0.27
+      },
+      "seed_summary": "/Users/liangqin/Documents/李承泽论文/论文源程序/TC-ADV/outputs/chapter4/main_comparison/icews18/lmca-tic_tcadv/seed_summary.json"
+    }
+  }
+}

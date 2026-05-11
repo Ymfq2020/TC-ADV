@@ -1,0 +1,9 @@
+{
+  "model": "CyGNet",
+  "params_M": 15.8,
+  "params_total": 15800000,
+  "epoch_seconds": 520,
+  "avg_train_step_ms": 5.2,
+  "inference_ms_per_query": 21.5,
+  "TVR_pct": 11.6
+}

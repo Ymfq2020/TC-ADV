@@ -1,0 +1,33 @@
+{
+  "base_config": "configs/experiments/full_gdelt.yaml",
+  "dataset": "GDELT",
+  "model": "LMCA-TIC+TC-ADV",
+  "sigmas": [
+    0.0,
+    1.0,
+    2.0
+  ],
+  "rows": [
+    {
+      "sigma": 0.0,
+      "MRR": 0.518,
+      "TVR": 0.028999999999999998,
+      "MRR_pct": 51.8,
+      "TVR_pct": 2.9
+    },
+    {
+      "sigma": 1.0,
+      "MRR": 0.48700000000000004,
+      "TVR": 0.053,
+      "MRR_pct": 48.7,
+      "TVR_pct": 5.3
+    },
+    {
+      "sigma": 2.0,
+      "MRR": 0.449,
+      "TVR": 0.10800000000000001,
+      "MRR_pct": 44.9,
+      "TVR_pct": 10.8
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "MRR": 0.46972154689597995,
+  "Hits@1": 0.36638280657886435,
+  "Hits@3": 0.5207895481130417,
+  "Hits@10": 0.5881936334849638,
+  "AUC-PR": 0.34122735907550755,
+  "TVR": 0.1018026133807286,
+  "trm_violation_rate": 0.055991437359400736,
+  "ecm_violation_rate": 0.04581117602132787,
+  "fused_violation_rate": 0.1018026133807286,
+  "violation_breakdown": {
+    "TRM-only": 206,
+    "ECM-only": 137,
+    "both": 115,
+    "none": 4042
+  },
+  "model": "LMCA-TIC",
+  "dataset": "ICEWS18",
+  "seed": 2024
+}

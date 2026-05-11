@@ -1,0 +1,41 @@
+{
+  "base_config": "configs/experiments/full_icews18.yaml",
+  "dataset": "ICEWS18",
+  "model": "RE-GCN+TC-ADV",
+  "sigmas": [
+    0.0,
+    0.5,
+    1.0,
+    2.0
+  ],
+  "rows": [
+    {
+      "sigma": 0.0,
+      "MRR": 0.434,
+      "TVR": 0.057,
+      "MRR_pct": 43.4,
+      "TVR_pct": 5.7
+    },
+    {
+      "sigma": 0.5,
+      "MRR": 0.42,
+      "TVR": 0.084,
+      "MRR_pct": 42.0,
+      "TVR_pct": 8.4
+    },
+    {
+      "sigma": 1.0,
+      "MRR": 0.39,
+      "TVR": 0.129,
+      "MRR_pct": 39.0,
+      "TVR_pct": 12.9
+    },
+    {
+      "sigma": 2.0,
+      "MRR": 0.355,
+      "TVR": 0.18600000000000003,
+      "MRR_pct": 35.5,
+      "TVR_pct": 18.6
+    }
+  ]
+}

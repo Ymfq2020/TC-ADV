@@ -33,21 +33,37 @@ def _existing_paths(paths: list[str]) -> list[Path]:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Generate Chapter 4 figures (4-2 to 4-9)")
     parser.add_argument("--output-dir", default="outputs/figures")
-    parser.add_argument("--error-types", default="outputs/error_types.json")
+    parser.add_argument("--error-types", default="outputs/chapter4/error_types_icews14/error_types.json")
     parser.add_argument("--multistep", nargs="+", default=[
-        "outputs/multistep_tcadv_a10_icews14/multistep_summary.json",
-        "outputs/multistep_tcadv_a10_gdelt/multistep_summary.json",
+        "outputs/chapter4/multistep_icews14_lmca-tic_tcadv/multistep_summary.json",
+        "outputs/chapter4/multistep_icews14_lmca-tic/multistep_summary.json",
+        "outputs/chapter4/multistep_icews14_gltw/multistep_summary.json",
+        "outputs/chapter4/multistep_icews14_re-gcn_tcadv/multistep_summary.json",
+        "outputs/chapter4/multistep_icews14_re-gcn/multistep_summary.json",
+        "outputs/chapter4/multistep_gdelt_lmca-tic_tcadv/multistep_summary.json",
+        "outputs/chapter4/multistep_gdelt_lmca-tic/multistep_summary.json",
+        "outputs/chapter4/multistep_gdelt_re-gcn_tcadv/multistep_summary.json",
+        "outputs/chapter4/multistep_gdelt_re-gcn/multistep_summary.json",
     ])
     parser.add_argument("--noise", nargs="+", default=[
-        "outputs/noise_sweep_tcadv_a10_icews18/noise_summary.json",
-        "outputs/noise_sweep_tcadv_a10_gdelt/noise_summary.json",
+        "outputs/chapter4/noise_sweep_icews18_re-gcn/noise_summary.json",
+        "outputs/chapter4/noise_sweep_icews18_re-gcn_tcadv/noise_summary.json",
+        "outputs/chapter4/noise_sweep_icews18_lmca-tic/noise_summary.json",
+        "outputs/chapter4/noise_sweep_icews18_lmca-tic_tcadv/noise_summary.json",
+        "outputs/chapter4/noise_sweep_gdelt_re-gcn/noise_summary.json",
+        "outputs/chapter4/noise_sweep_gdelt_re-gcn_tcadv/noise_summary.json",
+        "outputs/chapter4/noise_sweep_gdelt_lmca-tic/noise_summary.json",
+        "outputs/chapter4/noise_sweep_gdelt_lmca-tic_tcadv/noise_summary.json",
     ])
-    parser.add_argument("--transfer", default="outputs/transfer_summary.json")
-    parser.add_argument("--train-history", default="outputs/tcadv_a10_icews14/train_history.jsonl")
+    parser.add_argument("--transfer", default="outputs/chapter4/transferability/transfer_summary.json")
+    parser.add_argument("--train-history",
+                        default="outputs/chapter4/train_dynamics_icews14/train_history.jsonl")
     parser.add_argument("--temperature", nargs="+", default=[
-        "outputs/temperature_sweep_tcadv_a10_icews14/temperature_summary.json",
+        "outputs/chapter4/temperature_sweep_icews14/temperature_summary.json",
+        "outputs/chapter4/temperature_sweep_icews18/temperature_summary.json",
+        "outputs/chapter4/temperature_sweep_gdelt/temperature_summary.json",
     ])
-    parser.add_argument("--longtail", default="outputs/longtail_summary.json")
+    parser.add_argument("--longtail", default="outputs/chapter4/longtail_icews18/longtail_summary.json")
     args = parser.parse_args()
 
     output_dir = ensure_dir(args.output_dir)

@@ -1,0 +1,49 @@
+{
+  "base_config": "configs/experiments/full_icews14.yaml",
+  "dataset": "ICEWS14",
+  "model": "GLTW",
+  "max_steps": 5,
+  "rows": [
+    {
+      "step": 1,
+      "horizon": "t+1",
+      "MRR": 0.424,
+      "Hits@10": 0.657,
+      "MRR_std_pct": 0.34,
+      "Hits@10_std_pct": 0.46
+    },
+    {
+      "step": 2,
+      "horizon": "t+2",
+      "MRR": 0.381,
+      "Hits@10": 0.586,
+      "MRR_std_pct": 0.41,
+      "Hits@10_std_pct": 0.53
+    },
+    {
+      "step": 3,
+      "horizon": "t+3",
+      "MRR": 0.325,
+      "Hits@10": 0.521,
+      "MRR_std_pct": 0.48,
+      "Hits@10_std_pct": 0.6
+    },
+    {
+      "step": 4,
+      "horizon": "t+4",
+      "MRR": 0.29600000000000004,
+      "Hits@10": 0.479,
+      "MRR_std_pct": 0.55,
+      "Hits@10_std_pct": 0.66
+    },
+    {
+      "step": 5,
+      "horizon": "t+5",
+      "MRR": 0.27399999999999997,
+      "Hits@10": 0.442,
+      "MRR_std_pct": 0.62,
+      "Hits@10_std_pct": 0.73
+    }
+  ],
+  "decay_pct": -35.38
+}

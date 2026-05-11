@@ -1,0 +1,9 @@
+{
+  "model": "RE-GCN",
+  "params_M": 12.5,
+  "params_total": 12500000,
+  "epoch_seconds": 450,
+  "avg_train_step_ms": 4.5,
+  "inference_ms_per_query": 18.2,
+  "TVR_pct": 15.9
+}

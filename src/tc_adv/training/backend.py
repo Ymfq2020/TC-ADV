@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import inspect
-import math
 from dataclasses import dataclass
 from pathlib import Path
 from types import SimpleNamespace
@@ -53,11 +52,8 @@ class LMCAAdapter:
         self.entity_to_idx = self.base_trainer.entity_to_idx
         self.relation_to_idx = self.base_trainer.relation_to_idx
         self.entity_prompts = self.base_trainer.entity_prompts
-        self.entity_neighbor_cache = self.base_trainer.entity_neighbor_cache
-        self.entity_delta_cache = self.base_trainer.entity_delta_cache
         self.model = self.base_trainer.model
         self.optimizer = self.base_trainer.optimizer
-        self.loss_fn = self.base_trainer.loss_fn
         self.embedding_dim = int(base_config.model.embedding_dim)
         self.device = getattr(
             self.base_trainer,
@@ -117,15 +113,7 @@ class LMCAAdapter:
         batch = self._move_batch_to_device(batch)
         with self._autocast():
             outputs = self.model(batch)
-        positive_scores = outputs["positive_scores"]
-        positive_labels = torch.ones_like(positive_scores)
-        loss = self.loss_fn(positive_scores, positive_labels)
-        negative_scores = outputs["negative_scores"]
-        if negative_scores is not None and batch["negative_mask"].any():
-            masked = negative_scores[batch["negative_mask"]]
-            negative_labels = torch.zeros_like(masked)
-            loss = loss + self.loss_fn(masked, negative_labels)
-        return loss
+        return self.base_trainer._compute_loss(outputs, batch)
 
     def real_score(self, sample):
         context = self.context_for_candidates(sample, [sample.quadruple.object], requires_grad=True)
@@ -134,44 +122,71 @@ class LMCAAdapter:
     def context_for_candidates(self, sample, candidate_ids: Sequence[str], requires_grad: bool = True) -> GeneratorContext:
         context_manager = _nullcontext() if requires_grad else torch.no_grad()
         with context_manager:
-            relation_history = torch.tensor([sample.relation_history], dtype=torch.float32, device=self.device)
             subject_ids = torch.tensor([self.entity_to_idx[sample.quadruple.subject]], dtype=torch.long, device=self.device)
             relation_ids = torch.tensor([self.relation_to_idx[sample.quadruple.relation]], dtype=torch.long, device=self.device)
-            subject_neighbor_ids, subject_neighbor_deltas = self.base_trainer._pad_neighbors(
+            query_timestamps = torch.tensor([float(sample.quadruple.timestamp)], dtype=torch.float32, device=self.device)
+            subject_prompts = self.model.text_encoder.tokenize_texts([sample.subject_prompt], device=self.device)
+            subject_neighbor_ids, subject_neighbor_relation_ids, subject_neighbor_deltas = self.base_trainer._pad_neighbors(
                 [sample.subject_neighbors],
+                [sample.subject_neighbor_relations],
                 [sample.extra.get("subject_neighbor_deltas", [])],
             )
             subject_neighbor_ids = subject_neighbor_ids.to(self.device)
+            subject_neighbor_relation_ids = subject_neighbor_relation_ids.to(self.device)
             subject_neighbor_deltas = subject_neighbor_deltas.to(self.device)
             with self._autocast():
+                r_t = self.model.compute_r_t(relation_ids, query_timestamps)
                 subject_embed, _ = self.model.encode_entities(
-                    prompts=[sample.subject_prompt],
-                    relation_histories=relation_history,
+                    prompts=subject_prompts,
                     entity_ids=subject_ids,
                     neighbor_ids=subject_neighbor_ids,
+                    neighbor_relation_ids=subject_neighbor_relation_ids,
                     neighbor_deltas=subject_neighbor_deltas,
+                    r_t=r_t,
                 )
                 subject_embed = subject_embed.repeat(len(candidate_ids), 1)
                 object_ids = torch.tensor([self.entity_to_idx[candidate] for candidate in candidate_ids], dtype=torch.long, device=self.device)
-                repeated_histories = relation_history.repeat(len(candidate_ids), 1)
-                object_neighbor_ids, object_neighbor_deltas = self.base_trainer._pad_neighbors(
-                    [self.entity_neighbor_cache.get(candidate, []) for candidate in candidate_ids],
-                    [self.entity_delta_cache.get(candidate, []) for candidate in candidate_ids],
+                object_prompts_raw = []
+                object_neighbor_lists = []
+                object_neighbor_relation_lists = []
+                object_neighbor_delta_lists = []
+                for candidate in candidate_ids:
+                    if candidate == sample.quadruple.object and hasattr(sample, "object_neighbors"):
+                        object_prompts_raw.append(getattr(sample, "object_prompt", self.entity_prompts[candidate]))
+                        object_neighbor_lists.append(list(sample.object_neighbors))
+                        object_neighbor_relation_lists.append(list(getattr(sample, "object_neighbor_relations", [])))
+                        object_neighbor_delta_lists.append(list(sample.extra.get("object_neighbor_deltas", [])))
+                    else:
+                        neighbors, relations, deltas = self._entity_context_at(candidate, int(sample.quadruple.timestamp))
+                        object_prompts_raw.append(self.entity_prompts[candidate])
+                        object_neighbor_lists.append(neighbors)
+                        object_neighbor_relation_lists.append(relations)
+                        object_neighbor_delta_lists.append(deltas)
+                object_prompts = self.model.text_encoder.tokenize_texts(
+                    object_prompts_raw,
+                    device=self.device,
+                )
+                object_neighbor_ids, object_neighbor_relation_ids, object_neighbor_deltas = self.base_trainer._pad_neighbors(
+                    object_neighbor_lists,
+                    object_neighbor_relation_lists,
+                    object_neighbor_delta_lists,
                 )
                 object_neighbor_ids = object_neighbor_ids.to(self.device)
+                object_neighbor_relation_ids = object_neighbor_relation_ids.to(self.device)
                 object_neighbor_deltas = object_neighbor_deltas.to(self.device)
+                repeated_r_t = r_t.repeat(len(candidate_ids), 1)
                 object_embed, _ = self.model.encode_entities(
-                    prompts=[self.entity_prompts[candidate] for candidate in candidate_ids],
-                    relation_histories=repeated_histories,
+                    prompts=object_prompts,
                     entity_ids=object_ids,
                     neighbor_ids=object_neighbor_ids,
+                    neighbor_relation_ids=object_neighbor_relation_ids,
                     neighbor_deltas=object_neighbor_deltas,
+                    r_t=repeated_r_t,
                 )
-                repeated_relation_ids = relation_ids.repeat(len(candidate_ids))
-                relation_embed = self.model.scorer.relation_embedding(repeated_relation_ids)
-                candidate_scores = self.model.scorer(subject_embed, repeated_relation_ids, object_embed)
+                relation_embed = repeated_r_t
+                candidate_scores = self.model.scorer(subject_embed, repeated_r_t, object_embed)
                 history_ids, history_deltas, history_mask = self._history_tensors(sample, candidate_ids)
-                history_embeddings = self.model.graph_encoder.embedding(history_ids)
+                history_embeddings = self.model.graph_encoder.entity_embedding(history_ids)
         subject_trm_score = 1.0
         return GeneratorContext(
             subject_embedding=subject_embed,
@@ -189,11 +204,12 @@ class LMCAAdapter:
         history_lists: list[list[str]] = []
         history_deltas: list[list[float]] = []
         for candidate in candidate_ids:
+            candidate_neighbors, _, candidate_deltas = self._entity_context_at(candidate, int(sample.quadruple.timestamp))
             neighbors, deltas = merge_neighbor_histories(
                 sample.subject_neighbors,
-                self.entity_neighbor_cache.get(candidate, []),
+                candidate_neighbors,
                 sample.extra.get("subject_neighbor_deltas", []),
-                self.entity_delta_cache.get(candidate, []),
+                candidate_deltas,
                 self.base_config.model.tgn_neighbor_size,
             )
             history_lists.append(neighbors)
@@ -220,6 +236,19 @@ class LMCAAdapter:
             torch.tensor(padded_ids, dtype=torch.long, device=self.device),
             torch.tensor(padded_deltas, dtype=torch.float32, device=self.device),
             torch.tensor(padded_mask, dtype=torch.bool, device=self.device),
+        )
+
+    def _entity_context_at(self, entity_id: str, timestamp: int) -> tuple[list[str], list[str], list[float]]:
+        if hasattr(self.base_trainer, "_entity_context_at"):
+            neighbors, relations, deltas = self.base_trainer._entity_context_at(entity_id, timestamp)
+            return list(neighbors), list(relations), list(deltas)
+        neighbor_cache = getattr(self.base_trainer, "entity_neighbor_cache", {})
+        relation_cache = getattr(self.base_trainer, "entity_neighbor_relation_cache", {})
+        delta_cache = getattr(self.base_trainer, "entity_delta_cache", {})
+        return (
+            list(neighbor_cache.get(entity_id, [])),
+            list(relation_cache.get(entity_id, [])),
+            list(delta_cache.get(entity_id, [])),
         )
 
     def save_generator_checkpoint(self, name: str) -> None:
@@ -391,10 +420,7 @@ class ToyGeneratorAdapter:
 def build_generator_backend(bridge: LMCATICBridge, base_config, smoke_mode: bool = False):
     if torch is None:
         return ToyGeneratorAdapter(bridge=bridge, base_config=base_config)
-    try:
-        return LMCAAdapter(bridge=bridge, base_config=base_config, smoke_mode=smoke_mode)
-    except Exception:
-        raise
+    return LMCAAdapter(bridge=bridge, base_config=base_config, smoke_mode=smoke_mode)
 
 
 def _stable_vector(key: str, dim: int) -> list[float]:

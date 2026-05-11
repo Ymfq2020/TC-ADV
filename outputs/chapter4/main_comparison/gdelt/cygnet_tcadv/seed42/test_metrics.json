@@ -1,0 +1,20 @@
+{
+  "MRR": 0.4935107567059011,
+  "Hits@1": 0.3849383902306029,
+  "Hits@3": 0.5330252384728233,
+  "Hits@10": 0.5922740375569906,
+  "AUC-PR": 0.3559766691576587,
+  "TVR": 0.03493209119970256,
+  "trm_violation_rate": 0.01921265015983641,
+  "ecm_violation_rate": 0.015719441039866153,
+  "fused_violation_rate": 0.03493209119970256,
+  "violation_breakdown": {
+    "TRM-only": 79,
+    "ECM-only": 52,
+    "both": 44,
+    "none": 4825
+  },
+  "model": "CyGNet+TC-ADV",
+  "dataset": "GDELT",
+  "seed": 42
+}

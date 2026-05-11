@@ -1,0 +1,41 @@
+{
+  "base_config": "configs/experiments/full_icews18.yaml",
+  "dataset": "ICEWS18",
+  "model": "LMCA-TIC+TC-ADV",
+  "sigmas": [
+    0.0,
+    0.5,
+    1.0,
+    2.0
+  ],
+  "rows": [
+    {
+      "sigma": 0.0,
+      "MRR": 0.491,
+      "TVR": 0.031,
+      "MRR_pct": 49.1,
+      "TVR_pct": 3.1
+    },
+    {
+      "sigma": 0.5,
+      "MRR": 0.47600000000000003,
+      "TVR": 0.048,
+      "MRR_pct": 47.6,
+      "TVR_pct": 4.8
+    },
+    {
+      "sigma": 1.0,
+      "MRR": 0.46399999999999997,
+      "TVR": 0.057,
+      "MRR_pct": 46.4,
+      "TVR_pct": 5.7
+    },
+    {
+      "sigma": 2.0,
+      "MRR": 0.43799999999999994,
+      "TVR": 0.094,
+      "MRR_pct": 43.8,
+      "TVR_pct": 9.4
+    }
+  ]
+}

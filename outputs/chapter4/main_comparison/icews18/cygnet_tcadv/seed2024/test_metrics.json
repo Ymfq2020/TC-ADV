@@ -1,0 +1,20 @@
+{
+  "MRR": 0.46045643122155716,
+  "Hits@1": 0.35915601635281463,
+  "Hits@3": 0.5040800339366075,
+  "Hits@10": 0.5648878778610064,
+  "AUC-PR": 0.3354829873573654,
+  "TVR": 0.050067014270817556,
+  "trm_violation_rate": 0.02753685784894966,
+  "ecm_violation_rate": 0.0225301564218679,
+  "fused_violation_rate": 0.050067014270817556,
+  "violation_breakdown": {
+    "TRM-only": 101,
+    "ECM-only": 68,
+    "both": 56,
+    "none": 4275
+  },
+  "model": "CyGNet+TC-ADV",
+  "dataset": "ICEWS18",
+  "seed": 2024
+}

@@ -1,0 +1,33 @@
+{
+  "base_config": "configs/experiments/full_gdelt.yaml",
+  "dataset": "GDELT",
+  "model": "RE-GCN",
+  "sigmas": [
+    0.0,
+    1.0,
+    2.0
+  ],
+  "rows": [
+    {
+      "sigma": 0.0,
+      "MRR": 0.392,
+      "TVR": 0.138,
+      "MRR_pct": 39.2,
+      "TVR_pct": 13.8
+    },
+    {
+      "sigma": 1.0,
+      "MRR": 0.314,
+      "TVR": 0.24600000000000002,
+      "MRR_pct": 31.4,
+      "TVR_pct": 24.6
+    },
+    {
+      "sigma": 2.0,
+      "MRR": 0.251,
+      "TVR": 0.39799999999999996,
+      "MRR_pct": 25.1,
+      "TVR_pct": 39.8
+    }
+  ]
+}

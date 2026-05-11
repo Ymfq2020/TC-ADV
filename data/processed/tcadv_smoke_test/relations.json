@@ -1,0 +1,10 @@
+{
+  "relations": [
+    "ally",
+    "trade"
+  ],
+  "inverse_relations": [
+    "ally__inverse",
+    "trade__inverse"
+  ]
+}

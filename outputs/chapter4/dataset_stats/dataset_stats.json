@@ -1,0 +1,29 @@
+{
+  "source": "论文表 4-2，按时间顺序划分",
+  "datasets": {
+    "GDELT": {
+      "entities": 500,
+      "relations": 20,
+      "time_granularity": "24h",
+      "train": 2735685,
+      "valid": 341961,
+      "test": 341961
+    },
+    "ICEWS14": {
+      "entities": 6869,
+      "relations": 230,
+      "time_granularity": "24h",
+      "train": 74845,
+      "valid": 8514,
+      "test": 7371
+    },
+    "ICEWS18": {
+      "entities": 23033,
+      "relations": 256,
+      "time_granularity": "24h",
+      "train": 373018,
+      "valid": 45995,
+      "test": 49545
+    }
+  }
+}

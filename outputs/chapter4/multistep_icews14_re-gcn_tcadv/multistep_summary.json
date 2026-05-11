@@ -1,0 +1,49 @@
+{
+  "base_config": "configs/experiments/full_icews14.yaml",
+  "dataset": "ICEWS14",
+  "model": "RE-GCN+TC-ADV",
+  "max_steps": 5,
+  "rows": [
+    {
+      "step": 1,
+      "horizon": "t+1",
+      "MRR": 0.395,
+      "Hits@10": 0.632,
+      "MRR_std_pct": 0.29,
+      "Hits@10_std_pct": 0.37
+    },
+    {
+      "step": 2,
+      "horizon": "t+2",
+      "MRR": 0.364,
+      "Hits@10": 0.573,
+      "MRR_std_pct": 0.35,
+      "Hits@10_std_pct": 0.44
+    },
+    {
+      "step": 3,
+      "horizon": "t+3",
+      "MRR": 0.32899999999999996,
+      "Hits@10": 0.516,
+      "MRR_std_pct": 0.42,
+      "Hits@10_std_pct": 0.51
+    },
+    {
+      "step": 4,
+      "horizon": "t+4",
+      "MRR": 0.3,
+      "Hits@10": 0.47700000000000004,
+      "MRR_std_pct": 0.48,
+      "Hits@10_std_pct": 0.58
+    },
+    {
+      "step": 5,
+      "horizon": "t+5",
+      "MRR": 0.276,
+      "Hits@10": 0.44,
+      "MRR_std_pct": 0.54,
+      "Hits@10_std_pct": 0.65
+    }
+  ],
+  "decay_pct": -30.13
+}

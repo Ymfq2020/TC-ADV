@@ -1,0 +1,20 @@
+{
+  "MRR": 0.4273952739969026,
+  "Hits@1": 0.3333683137175841,
+  "Hits@3": 0.46721829141933896,
+  "Hits@10": 0.5231132297102543,
+  "AUC-PR": 0.31498506987807956,
+  "TVR": 0.1602652256530788,
+  "trm_violation_rate": 0.08814587410919333,
+  "ecm_violation_rate": 0.07211935154388546,
+  "fused_violation_rate": 0.1602652256530788,
+  "violation_breakdown": {
+    "TRM-only": 325,
+    "ECM-only": 216,
+    "both": 180,
+    "none": 3779
+  },
+  "model": "GLTW",
+  "dataset": "ICEWS18",
+  "seed": 42
+}

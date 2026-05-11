@@ -1,0 +1,20 @@
+{
+  "MRR": 0.4768670072302558,
+  "Hits@1": 0.37195626563959955,
+  "Hits@3": 0.516345514768543,
+  "Hits@10": 0.5746570395124282,
+  "AUC-PR": 0.3456575444827586,
+  "TVR": 0.05201537762687418,
+  "trm_violation_rate": 0.028608457694780803,
+  "ecm_violation_rate": 0.023406919932093383,
+  "fused_violation_rate": 0.05201537762687418,
+  "violation_breakdown": {
+    "TRM-only": 117,
+    "ECM-only": 78,
+    "both": 65,
+    "none": 4740
+  },
+  "model": "GLTW+TC-ADV",
+  "dataset": "GDELT",
+  "seed": 42
+}
